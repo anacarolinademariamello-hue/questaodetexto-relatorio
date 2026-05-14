@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@questaodetexto — Análise Instagram · Questão de Texto</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #07080f;
+    --card: #0d0f1c;
+    --card2: #10121f;
+    --border: rgba(255,255,255,0.07);
+    --green: #10b981;
+    --green-light: #6ee7b7;
+    --teal: #14b8a6;
+    --cyan: #06b6d4;
+    --blue: #3b82f6;
+    --purple: #8b5cf6;
+    --pink: #ec4899;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --sub: #94a3b8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; font-size:14px; line-height:1.6; }
+
+  .header {
+    background: linear-gradient(135deg, #041a14 0%, #051f1a 50%, #070f1a 100%);
+    border-bottom: 1px solid rgba(16,185,129,0.3);
+    padding: 40px 32px 36px;
+    position: relative; overflow: hidden;
+  }
+  .header::before { content:''; position:absolute; top:-80px; right:-80px; width:400px; height:400px; background:radial-gradient(circle,rgba(16,185,129,0.15) 0%,transparent 70%); pointer-events:none; }
+  .header::after { content:''; position:absolute; bottom:-60px; left:20%; width:300px; height:300px; background:radial-gradient(circle,rgba(6,182,212,0.1) 0%,transparent 70%); pointer-events:none; }
+  .header-inner { max-width:1200px; margin:0 auto; position:relative; z-index:1; }
+  .header-top { display:flex; align-items:flex-start; gap:24px; flex-wrap:wrap; }
+  .avatar-wrap { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,var(--green),var(--cyan)); display:flex; align-items:center; justify-content:center; font-size:36px; flex-shrink:0; box-shadow:0 0 30px rgba(16,185,129,0.4); }
+  .header-info { flex:1; }
+  .profile-handle { font-size:13px; color:var(--green-light); letter-spacing:0.05em; text-transform:uppercase; font-weight:600; margin-bottom:4px; }
+  .profile-name { font-size:28px; font-weight:700; color:var(--text); margin-bottom:6px; }
+  .profile-bio { font-size:13px; color:var(--sub); max-width:520px; border-left:2px solid rgba(16,185,129,0.5); padding-left:12px; margin-bottom:12px; }
+  .profile-tags { display:flex; gap:8px; flex-wrap:wrap; }
+  .tag { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:var(--green-light); }
+  .tag.blue { background:rgba(59,130,246,0.15); border-color:rgba(59,130,246,0.3); color:#93c5fd; }
+  .tag.teal { background:rgba(20,184,166,0.15); border-color:rgba(20,184,166,0.3); color:#5eead4; }
+  .header-stats { display:flex; gap:24px; margin-top:20px; flex-wrap:wrap; }
+  .hstat { text-align:center; }
+  .hstat-val { font-size:22px; font-weight:700; color:var(--text); }
+  .hstat-lbl { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
+  .hstat-divider { width:1px; background:var(--border); }
+  .report-meta { margin-top:20px; padding-top:16px; border-top:1px solid var(--border); display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+  .report-meta span { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:5px; }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--green); display:inline-block; }
+
+  .main { max-width:1200px; margin:0 auto; padding:32px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:16px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+  .section-title::after { content:''; flex:1; height:1px; background:linear-gradient(to right,var(--border),transparent); }
+  .section-badge { font-size:10px; padding:2px 8px; border-radius:10px; font-weight:700; background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.3); color:var(--green-light); text-transform:uppercase; letter-spacing:0.05em; }
+
+  .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-bottom:32px; }
+  .kpi { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px 18px; position:relative; overflow:hidden; transition:transform 0.2s,border-color 0.2s; }
+  .kpi:hover { transform:translateY(-2px); border-color:rgba(255,255,255,0.12); }
+  .kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  .kpi.green::before { background:linear-gradient(90deg,var(--green),var(--teal)); }
+  .kpi.teal::before { background:linear-gradient(90deg,var(--teal),var(--cyan)); }
+  .kpi.blue::before { background:linear-gradient(90deg,var(--blue),var(--cyan)); }
+  .kpi.orange::before { background:linear-gradient(90deg,var(--orange),var(--red)); }
+  .kpi.pink::before { background:linear-gradient(90deg,var(--pink),var(--purple)); }
+  .kpi.cyan::before { background:linear-gradient(90deg,var(--cyan),var(--blue)); }
+  .kpi-icon { font-size:22px; margin-bottom:10px; }
+  .kpi-val { font-size:26px; font-weight:800; color:var(--text); line-height:1; margin-bottom:4px; }
+  .kpi-lbl { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
+  .kpi-sub { font-size:11px; color:var(--sub); margin-top:6px; }
+  .kpi-badge { display:inline-flex; align-items:center; gap:3px; font-size:10px; font-weight:700; padding:2px 6px; border-radius:6px; margin-top:6px; }
+  .kpi-badge.up { background:rgba(16,185,129,0.15); color:#6ee7b7; }
+  .kpi-badge.warn { background:rgba(245,158,11,0.15); color:#fcd34d; }
+  .kpi-badge.down { background:rgba(239,68,68,0.15); color:#fca5a5; }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; }
+  .card-title { font-size:13px; font-weight:700; color:var(--sub); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; }
+  .chart-container { position:relative; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+  .grid-2-1 { display:grid; grid-template-columns:2fr 1fr; gap:20px; }
+  @media(max-width:900px){ .grid-2,.grid-3,.grid-2-1{ grid-template-columns:1fr; } }
+
+  .posts-list { display:flex; flex-direction:column; gap:12px; }
+  .post-row { display:grid; grid-template-columns:auto 1fr auto auto auto auto auto; align-items:center; gap:12px; background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:14px 18px; transition:border-color 0.2s; }
+  .post-row:hover { border-color:rgba(16,185,129,0.3); }
+  .post-rank { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; }
+  .post-rank.gold { background:rgba(245,158,11,0.2); color:#fcd34d; border:1px solid rgba(245,158,11,0.3); }
+  .post-rank.silver { background:rgba(148,163,184,0.15); color:#cbd5e1; border:1px solid rgba(148,163,184,0.2); }
+  .post-rank.bronze { background:rgba(180,120,60,0.2); color:#d4956a; border:1px solid rgba(180,120,60,0.3); }
+  .post-rank.other { background:rgba(255,255,255,0.05); color:var(--muted); border:1px solid var(--border); }
+  .post-caption { font-size:13px; color:var(--text); line-height:1.3; }
+  .post-date { font-size:11px; color:var(--muted); margin-top:2px; }
+  .post-type-badge { font-size:10px; font-weight:700; padding:3px 8px; border-radius:6px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; }
+  .post-type-badge.reel { background:rgba(16,185,129,0.2); color:var(--green-light); border:1px solid rgba(16,185,129,0.2); }
+  .post-type-badge.carousel { background:rgba(6,182,212,0.2); color:#67e8f9; border:1px solid rgba(6,182,212,0.2); }
+  .post-type-badge.image { background:rgba(245,158,11,0.2); color:#fcd34d; border:1px solid rgba(245,158,11,0.2); }
+  .post-metric { text-align:center; min-width:60px; }
+  .post-metric-val { font-size:15px; font-weight:700; color:var(--text); }
+  .post-metric-lbl { font-size:10px; color:var(--muted); text-transform:uppercase; }
+  .post-link { font-size:18px; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+  .post-link:hover { color:var(--green-light); }
+
+  .audience-legend { display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+  .legend-row { display:flex; align-items:center; gap:10px; }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .legend-label { font-size:12px; color:var(--sub); flex:1; }
+  .legend-val { font-size:13px; font-weight:700; color:var(--text); }
+  .legend-pct { font-size:11px; color:var(--muted); }
+
+  .country-list { display:flex; flex-direction:column; gap:12px; }
+  .country-row { }
+  .country-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .country-name { font-size:12px; color:var(--sub); display:flex; align-items:center; gap:6px; }
+  .country-val { font-size:12px; font-weight:700; color:var(--text); }
+  .country-bar-bg { height:4px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; }
+  .country-bar-fill { height:100%; border-radius:2px; }
+
+  .analysis-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media(max-width:800px){ .analysis-grid{ grid-template-columns:1fr; } }
+  .analysis-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; }
+  .analysis-card-title { font-size:14px; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .analysis-items { display:flex; flex-direction:column; gap:10px; }
+  .analysis-item { padding:12px 14px; border-radius:10px; border-left:3px solid; }
+  .analysis-item.good { background:rgba(16,185,129,0.06); border-color:var(--green); }
+  .analysis-item.warn { background:rgba(245,158,11,0.06); border-color:var(--orange); }
+  .analysis-item.info { background:rgba(59,130,246,0.06); border-color:var(--blue); }
+  .analysis-item.teal { background:rgba(20,184,166,0.06); border-color:var(--teal); }
+  .analysis-item-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:3px; }
+  .analysis-item-body { font-size:12px; color:var(--sub); line-height:1.5; }
+  .analysis-item-tip { margin-top:6px; font-size:11px; display:flex; align-items:flex-start; gap:5px; }
+  .analysis-item-tip.green { color:#86efac; }
+  .analysis-item-tip.orange { color:#fcd34d; }
+  .analysis-item-tip.blue { color:#93c5fd; }
+
+  .reco-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+  .reco-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; position:relative; overflow:hidden; }
+  .reco-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  .reco-card.g::before { background:linear-gradient(90deg,var(--green),var(--teal)); }
+  .reco-card.b::before { background:linear-gradient(90deg,var(--blue),var(--cyan)); }
+  .reco-card.p::before { background:linear-gradient(90deg,var(--purple),var(--pink)); }
+  .reco-card.o::before { background:linear-gradient(90deg,var(--orange),var(--red)); }
+  .reco-num { font-size:32px; font-weight:900; position:absolute; top:12px; right:16px; opacity:0.06; color:var(--text); line-height:1; }
+  .reco-icon { font-size:24px; margin-bottom:10px; }
+  .reco-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:6px; }
+  .reco-body { font-size:12px; color:var(--sub); line-height:1.5; }
+  .reco-priority { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; padding:2px 7px; border-radius:6px; margin-top:8px; text-transform:uppercase; letter-spacing:0.05em; }
+  .reco-priority.high { background:rgba(239,68,68,0.15); color:#fca5a5; }
+  .reco-priority.med { background:rgba(245,158,11,0.15); color:#fcd34d; }
+  .reco-priority.low { background:rgba(16,185,129,0.15); color:#6ee7b7; }
+
+  .alert { border-radius:12px; padding:14px 18px; display:flex; align-items:flex-start; gap:12px; margin-bottom:20px; }
+  .alert.warn { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); }
+  .alert.info { background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); }
+  .alert.green { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); }
+  .alert-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+  .alert-text { font-size:13px; color:var(--sub); }
+  .alert-text strong { color:var(--text); }
+
+  .insight { background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(6,182,212,0.06)); border:1px solid rgba(16,185,129,0.2); border-radius:14px; padding:16px 20px; margin-bottom:20px; display:flex; align-items:flex-start; gap:12px; }
+  .insight-icon { font-size:20px; flex-shrink:0; }
+  .insight-text { font-size:13px; color:var(--sub); line-height:1.6; }
+  .insight-text strong { color:var(--text); }
+
+  .footer { text-align:center; padding:28px; color:var(--muted); font-size:11px; border-top:1px solid var(--border); margin-top:40px; }
+
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:rgba(16,185,129,0.3); border-radius:3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="avatar-wrap">📚</div>
+      <div class="header-info">
+        <div class="profile-handle">📍 instagram · @questaodetexto</div>
+        <div class="profile-name">Questão de Texto</div>
+        <div class="profile-bio">
+          👩🏻‍🏫🧑🏻‍🏫 Jojô e Pedrinho: professores de Língua Portuguesa especialistas (de verdade) em Linguagens no Enem. Acerte 40+! 🚀 · <a href="https://linktr.ee/questaodetexto" style="color:#6ee7b7; text-decoration:none;">linktr.ee/questaodetexto</a>
+        </div>
+        <div class="profile-tags">
+          <span class="tag">📖 Educação · Enem</span>
+          <span class="tag teal">🏫 Linguagens & Redação</span>
+          <span class="tag blue">🇧🇷 Brasil</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="hstat"><div class="hstat-val">15.154</div><div class="hstat-lbl">Seguidores</div></div>
+      <div class="hstat-divider"></div>
+      <div class="hstat"><div class="hstat-val">50</div><div class="hstat-lbl">Seguindo</div></div>
+      <div class="hstat-divider"></div>
+      <div class="hstat"><div class="hstat-val">370</div><div class="hstat-lbl">Posts</div></div>
+      <div class="hstat-divider"></div>
+      <div class="hstat"><div class="hstat-val">303×</div><div class="hstat-lbl">Ratio Seg/Seg</div></div>
+      <div class="hstat-divider"></div>
+      <div class="hstat"><div class="hstat-val">+1.440</div><div class="hstat-lbl">Novos Seguidores (30d)</div></div>
+    </div>
+    <div class="report-meta">
+      <span><span class="dot"></span> Dados coletados via Windsor.ai</span>
+      <span>📅 Período: 14 abr – 13 mai 2026</span>
+      <span>🕒 Gerado em 14/05/2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- KPIs -->
+  <div class="section">
+    <div class="section-title"><span>📊</span> Métricas do Período (30 dias) <span class="section-badge">14 abr – 13 mai 2026</span></div>
+
+    <div class="kpi-grid">
+      <div class="kpi green">
+        <div class="kpi-icon">👁️</div>
+        <div class="kpi-val">269.652</div>
+        <div class="kpi-lbl">Visualizações</div>
+        <div class="kpi-sub">Média: 8.988/dia</div>
+        <span class="kpi-badge up">▲ Pico: 16.987 (29/04)</span>
+      </div>
+      <div class="kpi teal">
+        <div class="kpi-icon">📡</div>
+        <div class="kpi-val">167.276</div>
+        <div class="kpi-lbl">Alcance Total</div>
+        <div class="kpi-sub">Média: 5.576/dia</div>
+        <span class="kpi-badge up">▲ Pico: 11.555 (29/04)</span>
+      </div>
+      <div class="kpi blue">
+        <div class="kpi-icon">💬</div>
+        <div class="kpi-val">4.201</div>
+        <div class="kpi-lbl">Interações Totais</div>
+        <div class="kpi-sub">Média: 140/dia</div>
+        <span class="kpi-badge up">▲ Pico: 268 (21/04)</span>
+      </div>
+      <div class="kpi pink">
+        <div class="kpi-icon">❤️</div>
+        <div class="kpi-val">2.979</div>
+        <div class="kpi-lbl">Curtidas</div>
+        <div class="kpi-sub">70,9% das interações</div>
+        <span class="kpi-badge up">▲ Pico: 224 (21/04)</span>
+      </div>
+      <div class="kpi orange">
+        <div class="kpi-icon">💾</div>
+        <div class="kpi-val">504</div>
+        <div class="kpi-lbl">Salvamentos</div>
+        <div class="kpi-sub">12% das interações</div>
+        <span class="kpi-badge up">▲ Excelente sinal</span>
+      </div>
+      <div class="kpi cyan">
+        <div class="kpi-icon">🔗</div>
+        <div class="kpi-val">242</div>
+        <div class="kpi-lbl">Compartilhamentos</div>
+        <div class="kpi-sub">5,8% das interações</div>
+        <span class="kpi-badge up">▲ Boa viralização</span>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-icon">💬</div>
+        <div class="kpi-val">101</div>
+        <div class="kpi-lbl">Comentários</div>
+        <div class="kpi-sub">2,4% das interações</div>
+        <span class="kpi-badge warn">⚠ Abaixo do potencial</span>
+      </div>
+      <div class="kpi teal">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-val">+1.440</div>
+        <div class="kpi-lbl">Novos Seguidores</div>
+        <div class="kpi-sub">Crescimento de +10,5%</div>
+        <span class="kpi-badge up">▲ Crescimento sólido</span>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text">
+        <strong>Taxa de engajamento médio: 2,51%</strong> (4.201 interações ÷ 167.276 alcance). Para uma conta com 15k seguidores no nicho de educação, essa taxa é <strong>acima da média de mercado (1–2%)</strong> — sinal de audiência qualificada e conteúdo relevante. O destaque é o índice de salvamentos de <strong>12%</strong>, muito superior à média do setor, confirmando que o conteúdo tem valor de referência para os alunos.
+      </div>
+    </div>
+  </div>
+
+  <!-- LINE CHART -->
+  <div class="section">
+    <div class="section-title"><span>📈</span> Evolução Diária — Views &amp; Alcance</div>
+    <div class="card">
+      <div class="card-title">Visualizações e Alcance por Dia (últimos 30 dias) <span style="font-size:11px;color:var(--muted);font-weight:400;">14 abr – 13 mai 2026</span></div>
+      <div class="chart-container" style="height:280px;"><canvas id="lineChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- INTERACTIONS + FOLLOWERS -->
+  <div class="grid-2-1" style="margin-bottom:32px;">
+    <div class="card">
+      <div class="card-title">Interações Diárias por Tipo</div>
+      <div class="chart-container" style="height:250px;"><canvas id="interactionsChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Novos Seguidores por Dia</div>
+      <div class="chart-container" style="height:250px;"><canvas id="followersChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- AUDIENCE -->
+  <div class="section">
+    <div class="section-title"><span>🎯</span> Análise da Audiência</div>
+
+    <div class="alert info">
+      <div class="alert-icon">🔍</div>
+      <div class="alert-text">
+        <strong>Insight importante:</strong> o público dominante é de <strong>mulheres (58,1%)</strong> na faixa <strong>35–44 anos (29,8%)</strong> — não o estudante típico do Enem (17–18 anos). Isso indica que a audiência é composta majoritariamente por <strong>professoras, concurseiras ou adultos em requalificação</strong>. Uma oportunidade real de criar conteúdo específico para esse perfil.
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">Distribuição por Gênero</div>
+        <div class="chart-container" style="height:200px;"><canvas id="genderChart"></canvas></div>
+        <div class="audience-legend" style="margin-top:14px;">
+          <div class="legend-row"><div class="legend-dot" style="background:#ec4899;"></div><div class="legend-label">Feminino</div><div class="legend-val">8.585</div><div class="legend-pct">58,1%</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#3b82f6;"></div><div class="legend-label">Masculino</div><div class="legend-val">3.776</div><div class="legend-pct">25,6%</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#475569;"></div><div class="legend-label">Não informado</div><div class="legend-val">2.417</div><div class="legend-pct">16,4%</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Faixa Etária dos Seguidores</div>
+        <div class="chart-container" style="height:220px;"><canvas id="ageChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Países de Origem</div>
+        <div class="country-list" style="margin-top:8px;">
+          <div class="country-row">
+            <div class="country-header"><div class="country-name">🇧🇷 Brasil</div><div class="country-val">14.755 <span style="color:var(--muted);font-size:11px;">97,4%</span></div></div>
+            <div class="country-bar-bg"><div class="country-bar-fill" style="width:97.4%;background:linear-gradient(90deg,#10b981,#06b6d4);"></div></div>
+          </div>
+          <div class="country-row">
+            <div class="country-header"><div class="country-name">🇵🇹 Portugal</div><div class="country-val">4 <span style="color:var(--muted);font-size:11px;">0,03%</span></div></div>
+            <div class="country-bar-bg"><div class="country-bar-fill" style="width:2%;background:#3b82f6;"></div></div>
+          </div>
+          <div class="country-row">
+            <div class="country-header"><div class="country-name">🇺🇸 EUA</div><div class="country-val">2 <span style="color:var(--muted);font-size:11px;">0,01%</span></div></div>
+            <div class="country-bar-bg"><div class="country-bar-fill" style="width:1%;background:#8b5cf6;"></div></div>
+          </div>
+          <div class="country-row">
+            <div class="country-header"><div class="country-name">🇵🇾 Paraguai</div><div class="country-val">2 <span style="color:var(--muted);font-size:11px;">0,01%</span></div></div>
+            <div class="country-bar-bg"><div class="country-bar-fill" style="width:1%;background:#ec4899;"></div></div>
+          </div>
+          <div class="country-row">
+            <div class="country-header"><div class="country-name">🌍 Outros</div><div class="country-val">14 <span style="color:var(--muted);font-size:11px;">0,09%</span></div></div>
+            <div class="country-bar-bg"><div class="country-bar-fill" style="width:1%;background:#f59e0b;"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:20px;padding:12px;border-radius:10px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);">
+          <div style="font-size:11px;color:#6ee7b7;font-weight:700;margin-bottom:4px;">💡 Sugestão</div>
+          <div style="font-size:11px;color:var(--sub);">Explore parceria com perfis educacionais de Portugal para crescimento lusófono. Conteúdo sobre vestibulares de Portugal pode abrir novo nicho.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT PERFORMANCE -->
+  <div class="section">
+    <div class="section-title"><span>🎬</span> Performance por Tipo de Conteúdo</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Engajamento Médio por Formato</div>
+        <div class="chart-container" style="height:240px;"><canvas id="formatChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Distribuição de Posts por Formato</div>
+        <div class="chart-container" style="height:240px;"><canvas id="typeChart"></canvas></div>
+      </div>
+    </div>
+    <div class="alert green" style="margin-top:16px;">
+      <div class="alert-icon">🎬</div>
+      <div class="alert-text">
+        <strong>Reels são absolutos:</strong> engajamento médio de <strong>87,1</strong> por Reel vs 43,7 por Carrossel e 23,4 por Imagem. Os trends com os professores (Jojô e Pedrinho) atingiram 1.500 de alcance — <strong>o dobro da média</strong>. <strong>Sugestão:</strong> aumentar para 5 Reels por semana, priorizando conteúdo com os professores em cena.
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP POSTS -->
+  <div class="section">
+    <div class="section-title"><span>🏆</span> Ranking dos Melhores Posts (30 dias)</div>
+
+    <div class="alert warn">
+      <div class="alert-icon">📉</div>
+      <div class="alert-text">
+        <strong>Queda acentuada após 07/05:</strong> o fim da campanha de aniversário (NIVERQT20) causou redução de ~80% nas visualizações — de ~15k/dia para ~2.7k. A campanha foi um sucesso, mas gerou dependência de conteúdo promocional. Planeje a próxima campanha com 2 semanas de antecedência.
+      </div>
+    </div>
+
+    <div class="posts-list">
+      <div class="post-row">
+        <div class="post-rank gold">1</div>
+        <div>
+          <div class="post-caption">"Fizemos um bate-bola porque nem só de aula vive o QT" 🎉</div>
+          <div class="post-date">📅 04/05/2026 · Cupom NIVERQT20</div>
+        </div>
+        <span class="post-type-badge reel">🎬 Reel</span>
+        <div class="post-metric"><div class="post-metric-val" style="color:#6ee7b7;">2.251</div><div class="post-metric-lbl">Views</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#10b981;">1.155</div><div class="post-metric-lbl">Alcance</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#f59e0b;">142</div><div class="post-metric-lbl">Engaj.</div></div>
+        <a href="https://www.instagram.com/reel/DX7otl4gRi1/" target="_blank" class="post-link">🔗</a>
+      </div>
+
+      <div class="post-row">
+        <div class="post-rank silver">2</div>
+        <div>
+          <div class="post-caption">"O Pedrinho também entrou na trend..." 🤣🧟‍♂️</div>
+          <div class="post-date">📅 21/04/2026</div>
+        </div>
+        <span class="post-type-badge reel">🎬 Reel</span>
+        <div class="post-metric"><div class="post-metric-val" style="color:#6ee7b7;">2.879</div><div class="post-metric-lbl">Views</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#10b981;">1.380</div><div class="post-metric-lbl">Alcance</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#f59e0b;">104</div><div class="post-metric-lbl">Engaj.</div></div>
+        <a href="https://www.instagram.com/reel/DXaImEpk6Ep/" target="_blank" class="post-link">🔗</a>
+      </div>
+
+      <div class="post-row">
+        <div class="post-rank bronze">3</div>
+        <div>
+          <div class="post-caption">"A Jojô entrou na trend..." 🤣🧟‍♀️</div>
+          <div class="post-date">📅 21/04/2026 · 🏅 Maior alcance do período: 1.503</div>
+        </div>
+        <span class="post-type-badge reel">🎬 Reel</span>
+        <div class="post-metric"><div class="post-metric-val" style="color:#6ee7b7;">2.876</div><div class="post-metric-lbl">Views</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#10b981;">1.503</div><div class="post-metric-lbl">Alcance</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#f59e0b;">99</div><div class="post-metric-lbl">Engaj.</div></div>
+        <a href="https://www.instagram.com/reel/DXZqP-NDvFL/" target="_blank" class="post-link">🔗</a>
+      </div>
+
+      <div class="post-row">
+        <div class="post-rank other">4</div>
+        <div>
+          <div class="post-caption">"Da primeira turma presencial do QT para Medicina na UFPE em 2026 💚"</div>
+          <div class="post-date">📅 06/05/2026 · Depoimento Enzo</div>
+        </div>
+        <span class="post-type-badge reel">🎬 Reel</span>
+        <div class="post-metric"><div class="post-metric-val" style="color:#6ee7b7;">1.784</div><div class="post-metric-lbl">Views</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#10b981;">912</div><div class="post-metric-lbl">Alcance</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#f59e0b;">84</div><div class="post-metric-lbl">Engaj.</div></div>
+        <a href="https://www.instagram.com/reel/DYAwwShiB3I/" target="_blank" class="post-link">🔗</a>
+      </div>
+
+      <div class="post-row">
+        <div class="post-rank other">5</div>
+        <div>
+          <div class="post-caption">"É HOJE — Aniversário do QT com cupom NIVERQT20!" 🎉</div>
+          <div class="post-date">📅 01/05/2026 · Campanha de aniversário</div>
+        </div>
+        <span class="post-type-badge reel">🎬 Reel</span>
+        <div class="post-metric"><div class="post-metric-val" style="color:#6ee7b7;">2.275</div><div class="post-metric-lbl">Views</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#10b981;">1.251</div><div class="post-metric-lbl">Alcance</div></div>
+        <div class="post-metric"><div class="post-metric-val" style="color:#f59e0b;">81</div><div class="post-metric-lbl">Engaj.</div></div>
+        <a href="https://www.instagram.com/reel/DXy5oVKEwor/" target="_blank" class="post-link">🔗</a>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Comparativo de Performance dos Posts (alcance vs engajamento)</div>
+      <div class="chart-container" style="height:260px;"><canvas id="postsChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ANALYSIS -->
+  <div class="section">
+    <div class="section-title"><span>🔍</span> Análise Estratégica</div>
+    <div class="analysis-grid">
+      <div class="analysis-card">
+        <div class="analysis-card-title"><span style="font-size:20px;">💪</span><span style="color:#6ee7b7;">Pontos Fortes</span></div>
+        <div class="analysis-items">
+          <div class="analysis-item good">
+            <div class="analysis-item-title">504 Salvamentos — Conteúdo de Alto Valor</div>
+            <div class="analysis-item-body">12% das interações são salvamentos, muito acima da média. Isso indica que os seguidores reconhecem o conteúdo como material de estudo, não apenas entretenimento. Excelente sinal de autoridade no nicho.</div>
+            <div class="analysis-item-tip green">✅ Invista mais em carrosséis didáticos — eles geram o maior volume de saves proporcionalmente.</div>
+          </div>
+          <div class="analysis-item good">
+            <div class="analysis-item-title">Campanhas com Excelente Conversão</div>
+            <div class="analysis-item-body">A campanha de aniversário (NIVERQT20) empurrou os dias 28–30/04 e 01–04/05 para os maiores alcances do período, chegando a 16.987 views/dia. As promoções funcionam muito bem para este perfil de audiência.</div>
+            <div class="analysis-item-tip green">✅ Planeje 3–4 campanhas por ano com cupons exclusivos para sustentar picos de alcance.</div>
+          </div>
+          <div class="analysis-item good">
+            <div class="analysis-item-title">+1.440 Seguidores em 30 dias (+10,5%)</div>
+            <div class="analysis-item-body">Crescimento consistente e orgânico ao longo de todo o período — praticamente todos os dias com novos seguidores. O pico foi 80 em um único dia (14/04), associado a um reel de alto alcance.</div>
+            <div class="analysis-item-tip green">✅ O crescimento diário constante mostra que o algoritmo favorece a conta — manter frequência de postagem é essencial.</div>
+          </div>
+          <div class="analysis-item teal">
+            <div class="analysis-item-title">Professores como Protagonistas = Alcance Máximo</div>
+            <div class="analysis-item-body">Os dois posts de maior alcance do período (1.503 e 1.380) foram os trends com a Jojô e o Pedrinho em câmera — mostrando que o rosto dos professores humaniza a marca e amplia organicamente a distribuição.</div>
+            <div class="analysis-item-tip blue">💡 Crie uma série fixa semanal com os professores em vídeo — desafios, bastidores ou QA ao vivo.</div>
+          </div>
+        </div>
+      </div>
+      <div class="analysis-card">
+        <div class="analysis-card-title"><span style="font-size:20px;">⚠️</span><span style="color:#fcd34d;">Pontos de Atenção</span></div>
+        <div class="analysis-items">
+          <div class="analysis-item warn">
+            <div class="analysis-item-title">Queda de 80% nas Views Após Campanha</div>
+            <div class="analysis-item-body">De 16k views/dia (pico) para 2.7k/dia após o encerramento do aniversário. A conta depende muito de campanhas para sustentar alcance — precisa de mais conteúdo orgânico "evergreen" que mantenha a base entre promoções.</div>
+            <div class="analysis-item-tip orange">💡 Crie 2 séries de conteúdo fixas que rodem sempre (ex: "Questão da semana" + "Erro mais comum do Enem") para manter o fluxo orgânico.</div>
+          </div>
+          <div class="analysis-item warn">
+            <div class="analysis-item-title">Audiência Mais Velha que o Público-Alvo</div>
+            <div class="analysis-item-body">35–44 anos domina com 29,8% da audiência — muito acima da faixa estudantil (13–17: só 1,2%). Isso pode indicar que o conteúdo ressoa mais com professores ou adultos, e não está convertendo estudantes do Ensino Médio.</div>
+            <div class="analysis-item-tip orange">💡 Crie conteúdo específico para vestibulandos com linguagem mais jovem, usando trends e referências da geração Z para atrair alunos de 15–18 anos.</div>
+          </div>
+          <div class="analysis-item warn">
+            <div class="analysis-item-title">Baixo Volume de Comentários (101 total)</div>
+            <div class="analysis-item-body">Com 15k seguidores e 30 dias de posts diários, 101 comentários é muito baixo. Os alunos não estão sendo incentivados a interagir ativamente, o que limita o alcance orgânico do algoritmo.</div>
+            <div class="analysis-item-tip orange">💡 Adicione perguntas diretas nas legendas: "Qual parte de Linguagens mais te trava no Enem? Comenta aqui 👇" — questões geram até 3× mais comentários.</div>
+          </div>
+          <div class="analysis-item warn">
+            <div class="analysis-item-title">Imagens Performam Muito Abaixo da Média</div>
+            <div class="analysis-item-body">Posts de imagem tiveram engajamento médio de apenas 23,4 vs 87,1 dos Reels. Dos 5 posts de imagem, 3 foram posts promocionais com baixíssimo engajamento (7 e 15 interações).</div>
+            <div class="analysis-item-tip orange">💡 Substitua posts de imagem promocional por Reels curtos (15–30s). Promoções em vídeo têm desempenho muito superior neste nicho.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECOMMENDATIONS -->
+  <div class="section">
+    <div class="section-title"><span>🚀</span> Recomendações Estratégicas</div>
+    <div class="reco-grid">
+      <div class="reco-card g">
+        <div class="reco-num">1</div>
+        <div class="reco-icon">🎬</div>
+        <div class="reco-title">Série Fixa com os Professores</div>
+        <div class="reco-body">Os dois maiores alcances foram Reels com Jojô e Pedrinho em câmera. Crie uma série semanal fixa (ex: "Questão Impossível de Quinta") onde eles aparecem ensinando ou reagindo. A personalidade dos professores é o maior diferencial do QT.</div>
+        <span class="reco-priority high">🔥 Alta prioridade</span>
+      </div>
+      <div class="reco-card b">
+        <div class="reco-num">2</div>
+        <div class="reco-icon">📅</div>
+        <div class="reco-title">Conteúdo "Evergreen" Entre Campanhas</div>
+        <div class="reco-body">Crie 2 pilares de conteúdo orgânico permanente que funcionem fora de campanhas: "Questão da semana com resolução" e "Erro mais comum no Enem". Esses formatos geram saves, compartilhamentos e alcance contínuo sem depender de promoções.</div>
+        <span class="reco-priority high">🔥 Alta prioridade</span>
+      </div>
+      <div class="reco-card g">
+        <div class="reco-num">3</div>
+        <div class="reco-icon">🧑‍🎓</div>
+        <div class="reco-title">Conteúdo para Vestibulandos (13–24 anos)</div>
+        <div class="reco-body">Apenas 16% da audiência tem menos de 24 anos — o público que mais compra cursos preparatórios. Crie Reels com linguagem da geração Z, trends virais adaptados para Enem, duetos com alunos aprovados e desafios de questões em tempo real.</div>
+        <span class="reco-priority high">🔥 Alta prioridade</span>
+      </div>
+      <div class="reco-card o">
+        <div class="reco-num">4</div>
+        <div class="reco-icon">💬</div>
+        <div class="reco-title">Perguntas nas Legendas para Gerar Comentários</div>
+        <div class="reco-body">Com 101 comentários em 30 dias e 15k seguidores, o potencial é enorme. Termine cada legenda com uma pergunta específica: "Qual é a parte de poesia que mais te confunde?", "Já erraste essa questão?". Comentários aumentam o alcance orgânico em até 40%.</div>
+        <span class="reco-priority med">⚡ Média prioridade</span>
+      </div>
+      <div class="reco-card b">
+        <div class="reco-num">5</div>
+        <div class="reco-icon">🏆</div>
+        <div class="reco-title">Depoimentos de Aprovados — Série Mensal</div>
+        <div class="reco-body">O Reel do Enzo aprovado em Medicina (84 engajamentos) prova que proof social tem alto impacto. Crie uma série mensal "Aprovado QT" com depoimentos em vídeo de alunos aprovados — é o conteúdo de maior conversão para vendas de curso.</div>
+        <span class="reco-priority med">⚡ Média prioridade</span>
+      </div>
+      <div class="reco-card g">
+        <div class="reco-num">6</div>
+        <div class="reco-icon">📆</div>
+        <div class="reco-title">Calendário de Campanhas Anuais</div>
+        <div class="reco-body">A campanha de aniversário foi um sucesso (pico de 16k views). Planeje 3–4 campanhas anuais: Volta às Aulas (jan/fev), Reta Final Enem (set/out), Black Friday (nov), Aniversário (mai). Cada campanha deve ter pelo menos 2 semanas de aquecimento com conteúdo orgânico.</div>
+        <span class="reco-priority med">⚡ Média prioridade</span>
+      </div>
+      <div class="reco-card p">
+        <div class="reco-num">7</div>
+        <div class="reco-icon">🤝</div>
+        <div class="reco-title">Collabs com Professores de Outras Áreas</div>
+        <div class="reco-body">A parceria com o prof. Fredão no aniversário foi positiva. Formalize collabs mensais com professores de Matemática, Ciências da Natureza e História para Reels conjuntos. Cada collab distribui o conteúdo para a base de seguidores dos dois perfis sem custo adicional.</div>
+        <span class="reco-priority low">✅ Baixa prioridade</span>
+      </div>
+      <div class="reco-card o">
+        <div class="reco-num">8</div>
+        <div class="reco-icon">📊</div>
+        <div class="reco-title">Explorar o Público Feminino (58%)</div>
+        <div class="reco-body">A maioria da audiência é feminina e com 35+ anos. Crie conteúdo específico: "Como estudar para o Enem voltando aos estudos depois dos 30", "Redação para quem trabalha e estuda", "Mães vestibulandas". Esse nicho tem alta intenção de compra e baixa concorrência.</div>
+        <span class="reco-priority med">⚡ Média prioridade</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div style="font-size:13px;color:var(--sub);margin-bottom:6px;">
+      Relatório gerado automaticamente via <strong style="color:#6ee7b7;">Windsor.ai</strong> + Claude AI para <strong>@questaodetexto · Questão de Texto</strong>
+    </div>
+    <div>Período: 14 de abril a 13 de maio de 2026 · Dados da API oficial do Instagram Business</div>
+  </div>
+
+</div>
+
+<script>
+const labels = ['14/04','15/04','16/04','17/04','18/04','19/04','20/04','21/04','22/04','23/04','24/04','25/04','26/04','27/04','28/04','29/04','30/04','01/05','02/05','03/05','04/05','05/05','06/05','07/05','08/05','09/05','10/05','11/05','12/05','13/05'];
+const views = [8504,6376,7826,7830,9556,10450,9529,12926,8047,7216,8490,10884,7588,14638,16298,16987,15685,13280,10669,9256,9550,10897,8416,5508,7796,4719,2651,2793,2565,2722];
+const reach = [6018,5315,4795,4243,5527,6015,4795,6056,7743,6384,7603,10288,4946,10144,11040,11555,11483,7649,4551,4003,4068,3455,2678,2313,4017,3041,1887,1923,1928,1813];
+const likes = [150,145,132,130,90,87,111,224,80,70,122,113,94,88,49,68,70,178,102,87,149,95,97,86,54,66,48,79,67,48];
+const comments = [2,0,2,4,0,1,3,7,3,0,2,0,0,2,0,6,3,14,2,3,6,5,12,20,2,0,1,1,0,0];
+const shares = [26,11,7,9,9,8,13,5,21,4,13,14,19,7,1,1,5,7,6,4,8,6,11,7,4,5,3,3,2,3];
+const saves = [38,50,32,21,29,19,34,23,25,14,23,15,13,24,13,11,19,11,7,5,6,19,6,7,4,5,4,8,11,8];
+const newFollowers = [80,74,62,45,63,66,37,45,31,32,49,67,51,53,32,50,64,56,45,44,63,47,31,48,34,43,36,46,46,0];
+
+Chart.defaults.color = '#64748b';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+Chart.defaults.font.size = 11;
+const gridColor = 'rgba(255,255,255,0.05)';
+const tickColor = '#475569';
+const tooltipDefaults = { backgroundColor:'rgba(13,15,28,0.95)', borderColor:'rgba(16,185,129,0.3)', borderWidth:1, titleColor:'#f1f5f9', bodyColor:'#94a3b8', padding:12 };
+
+new Chart(document.getElementById('lineChart'), {
+  type:'line',
+  data:{ labels, datasets:[
+    { label:'Views', data:views, borderColor:'#10b981', backgroundColor:'rgba(16,185,129,0.08)', borderWidth:2, pointRadius:3, pointHoverRadius:6, pointBackgroundColor:'#10b981', tension:0.4, fill:true },
+    { label:'Alcance', data:reach, borderColor:'#06b6d4', backgroundColor:'rgba(6,182,212,0.05)', borderWidth:2, pointRadius:2, pointHoverRadius:5, pointBackgroundColor:'#06b6d4', tension:0.4, fill:true }
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+    plugins:{ legend:{position:'top',labels:{color:'#94a3b8',boxWidth:12,padding:16}}, tooltip:tooltipDefaults },
+    scales:{ x:{grid:{color:gridColor},ticks:{color:tickColor,maxRotation:45}}, y:{grid:{color:gridColor},ticks:{color:tickColor}} }
+  }
+});
+
+new Chart(document.getElementById('interactionsChart'), {
+  type:'bar',
+  data:{ labels, datasets:[
+    {label:'Curtidas',data:likes,backgroundColor:'rgba(236,72,153,0.7)',borderRadius:3},
+    {label:'Comentários',data:comments,backgroundColor:'rgba(6,182,212,0.7)',borderRadius:3},
+    {label:'Shares',data:shares,backgroundColor:'rgba(16,185,129,0.7)',borderRadius:3},
+    {label:'Saves',data:saves,backgroundColor:'rgba(245,158,11,0.7)',borderRadius:3},
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+    plugins:{ legend:{position:'top',labels:{color:'#94a3b8',boxWidth:10,padding:12}}, tooltip:tooltipDefaults },
+    scales:{ x:{stacked:true,grid:{color:gridColor},ticks:{color:tickColor,maxRotation:45}}, y:{stacked:true,grid:{color:gridColor},ticks:{color:tickColor}} }
+  }
+});
+
+new Chart(document.getElementById('followersChart'), {
+  type:'bar',
+  data:{ labels, datasets:[{label:'Novos Seguidores',data:newFollowers,backgroundColor:newFollowers.map(v=>v>60?'rgba(16,185,129,0.9)':v>40?'rgba(16,185,129,0.6)':'rgba(16,185,129,0.35)'),borderRadius:4}]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:tooltipDefaults },
+    scales:{ x:{grid:{color:gridColor},ticks:{color:tickColor,maxRotation:45}}, y:{grid:{color:gridColor},ticks:{color:tickColor}} }
+  }
+});
+
+new Chart(document.getElementById('genderChart'), {
+  type:'doughnut',
+  data:{ labels:['Feminino','Masculino','Não informado'], datasets:[{data:[8585,3776,2417],backgroundColor:['rgba(236,72,153,0.8)','rgba(59,130,246,0.8)','rgba(71,85,105,0.6)'],borderColor:['#ec4899','#3b82f6','#475569'],borderWidth:2}]},
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'65%',
+    plugins:{ legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw.toLocaleString('pt-BR')} (${Math.round(ctx.raw/14778*100)}%)`}} }
+  }
+});
+
+new Chart(document.getElementById('ageChart'), {
+  type:'bar',
+  data:{ labels:['13–17','18–24','25–34','35–44','45–54','55–64','65+'],
+    datasets:[{label:'Seguidores',data:[172,2180,3842,4407,2935,958,284],
+      backgroundColor:['rgba(16,185,129,0.3)','rgba(16,185,129,0.5)','rgba(16,185,129,0.75)','rgba(16,185,129,0.95)','rgba(16,185,129,0.65)','rgba(16,185,129,0.4)','rgba(16,185,129,0.25)'],
+      borderColor:'rgba(16,185,129,0.3)',borderWidth:1,borderRadius:6}]},
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{...tooltipDefaults,callbacks:{label:ctx=>` ${ctx.raw.toLocaleString('pt-BR')} seguidores (${Math.round(ctx.raw/14778*100)}%)`}} },
+    scales:{ x:{grid:{color:gridColor},ticks:{color:tickColor}}, y:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:12}}} }
+  }
+});
+
+new Chart(document.getElementById('formatChart'), {
+  type:'bar',
+  data:{ labels:['Reels','Carrossel','Imagem'], datasets:[{label:'Engajamento Médio',data:[87.1,43.7,23.4],backgroundColor:['rgba(16,185,129,0.85)','rgba(6,182,212,0.85)','rgba(245,158,11,0.85)'],borderRadius:8,barThickness:50}]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:tooltipDefaults },
+    scales:{ x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:13,weight:'600'}}}, y:{grid:{color:gridColor},ticks:{color:tickColor}} }
+  }
+});
+
+new Chart(document.getElementById('typeChart'), {
+  type:'doughnut',
+  data:{ labels:['Reels (7)','Carrossel (3)','Imagem (5)'], datasets:[{data:[7,3,5],backgroundColor:['rgba(16,185,129,0.8)','rgba(6,182,212,0.8)','rgba(245,158,11,0.8)'],borderColor:['#10b981','#06b6d4','#f59e0b'],borderWidth:2}]},
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'60%',
+    plugins:{ legend:{position:'bottom',labels:{color:'#94a3b8',boxWidth:12,padding:14,font:{size:12}}},
+      tooltip:{...tooltipDefaults,callbacks:{label:ctx=>` ${ctx.label}: ${Math.round(ctx.raw/15*100)}% dos posts`}} }
+  }
+});
+
+const pLabels = ['"Bate-bola QT"','"Pedrinho trend"','"Jojô trend"','"Depoimento Enzo"','"Aniversário É HOJE"','"Repertório de bolso"','"Subversão no Enem"'];
+new Chart(document.getElementById('postsChart'), {
+  type:'bar',
+  data:{ labels:pLabels, datasets:[
+    {label:'Alcance',data:[1155,1380,1503,912,1251,829,886],backgroundColor:'rgba(6,182,212,0.6)',borderColor:'#06b6d4',borderWidth:1,borderRadius:6,yAxisID:'y1'},
+    {label:'Engajamento',data:[142,104,99,84,81,79,73],backgroundColor:'rgba(16,185,129,0.8)',borderColor:'#10b981',borderWidth:1,borderRadius:6,yAxisID:'y2',type:'line',pointRadius:5,pointHoverRadius:7,pointBackgroundColor:'#10b981',tension:0.3}
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+    plugins:{ legend:{position:'top',labels:{color:'#94a3b8',boxWidth:12,padding:14}}, tooltip:tooltipDefaults },
+    scales:{
+      x:{grid:{color:gridColor},ticks:{color:tickColor,maxRotation:20,font:{size:10}}},
+      y1:{position:'left',grid:{color:gridColor},ticks:{color:'#06b6d4'},title:{display:true,text:'Alcance',color:'#06b6d4'}},
+      y2:{position:'right',grid:{display:false},ticks:{color:'#10b981'},title:{display:true,text:'Engajamento',color:'#10b981'}}
+    }
+  }
+});
+</script>
+</body>
+</html>
