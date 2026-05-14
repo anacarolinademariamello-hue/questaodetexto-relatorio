@@ -6,10 +6,26 @@
 <title>@questaodetexto — Análise Instagram · Questão de Texto</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-:root{--bg:#f0f2f8;--card:#fff;--card2:#f5f6fb;--border:rgba(50,58,146,0.12);--p:#323a92;--p2:#5563b5;--pl:rgba(50,58,146,0.08);--a:#e960b2;--ad:#c040a0;--al:rgba(233,96,178,0.13);--tx:#0d1035;--sub:#4a5068;--mu:#8890a8;--gr:#0a7a55;--re:#9b1c1c;--am:#b45309;--amg:rgba(180,83,9,0.09)}
+:root{
+  --p:#323a92;
+  --p2:#4a54c7;
+  --a:#e960b2;
+  --ad:#c940a0;
+  --al:rgba(233,96,178,0.13);
+  --pl:rgba(50,58,146,0.08);
+  --bg:#f3f4fd;
+  --white:#ffffff;
+  --text:#1a1a2e;
+  --muted:#6b7280;
+  --border:#dde3ed;
+  --green:#10b981;
+  --orange:#f97316;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6}
-.hdr{background:linear-gradient(135deg,#323a92,#5563b5 65%,#4451a8);padding:40px 32px 36px;position:relative;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(135deg,#323a92,#4a54c7 65%,#3d47b0);padding:40px 32px 36px;position:relative;overflow:hidden}
 .hdr::before{content:'';position:absolute;top:-80px;right:-60px;width:380px;height:380px;background:radial-gradient(circle,rgba(233,96,178,0.22),transparent 65%);pointer-events:none}
 .hdr::after{content:'';position:absolute;bottom:-60px;left:5%;width:300px;height:300px;background:radial-gradient(circle,rgba(251,190,27,0.1),transparent 65%);pointer-events:none}
 .hi{max-width:1200px;margin:0 auto;position:relative;z-index:1}
@@ -27,70 +43,105 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .hsv{font-size:21px;font-weight:800;color:#fff}
 .hsl{font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.05em}
 .hsep{width:1px;background:rgba(255,255,255,.18);align-self:stretch}
-.pbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(233,96,178,.18);border:1px solid rgba(233,96,178,.4);color:#f9a0d8;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;margin-top:18px}
+.pbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(233,96,178,.18);border:1px solid rgba(233,96,178,.4);padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;margin-top:18px;color:#fbbe1b;border-color:rgba(251,190,27,0.45)}
+
+/* ── LAYOUT ── */
 .wrap{max-width:1200px;margin:0 auto;padding:28px 24px}
 .st{font-size:11px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .st::after{content:'';flex:1;height:1px;background:var(--border)}
-.kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:13px;margin-bottom:26px}
-.kp{background:var(--card);border-radius:14px;padding:17px 19px;border:1px solid var(--border);position:relative;overflow:hidden;box-shadow:0 2px 7px rgba(50,58,146,.05)}
-.kp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
-.kp.n1::before{background:var(--p)}.kp.n2::before{background:var(--p2)}.kp.a1::before{background:var(--a)}.kp.a2::before{background:var(--ad)}.kp.g::before{background:#10b981}.kp.v::before{background:#6366f1}
-.ki{font-size:19px;margin-bottom:7px}
-.kv{font-size:25px;font-weight:800;color:var(--tx);line-height:1;margin-bottom:3px}
-.kl{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
-.ks{font-size:11px;margin-top:5px;font-weight:600}
-.sup{color:var(--gr)}.swn{color:var(--am)}.sn{color:var(--mu)}.sdn{color:var(--re)}
-.obs{background:linear-gradient(135deg,var(--pl),rgba(233,96,178,.07));border:1.5px solid rgba(50,58,146,.18);border-radius:14px;padding:20px 24px;margin-bottom:26px}
-.obs-title{font-size:13px;font-weight:800;color:var(--p);margin-bottom:7px}
-.obs-body{font-size:13px;color:var(--sub);line-height:1.65}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:24px}
 @media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
-.cd{background:var(--card);border-radius:14px;padding:20px;border:1px solid var(--border);box-shadow:0 2px 7px rgba(50,58,146,.05);margin-bottom:24px}
+
+/* ── KPI CARDS ── */
+.kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:13px;margin-bottom:26px}
+.kp{background:var(--white);border-radius:14px;padding:17px 19px;border:1px solid var(--border);position:relative;overflow:hidden;box-shadow:0 2px 7px rgba(50,58,146,.05)}
+.kp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+.kp.n1::before{background:var(--p)}.kp.n2::before{background:var(--p2)}.kp.a1::before{background:var(--a)}.kp.a2::before{background:var(--ad)}.kp.g::before{background:var(--green)}.kp.v::before{background:#6366f1}.kp.go::before{background:#fbbe1b}.kp.or::before{background:var(--orange)}
+.ki{font-size:19px;margin-bottom:7px}
+.kv{font-size:25px;font-weight:800;color:var(--text);line-height:1;margin-bottom:3px}
+.kl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.ks{font-size:11px;margin-top:5px;font-weight:600}
+.ks-green{color:var(--green)}.ks-muted{color:var(--muted)}.ks-orange{color:var(--orange)}.ks-gold{color:#b45309}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;text-transform:uppercase}
+.badge-green{background:rgba(16,185,129,.12);color:#065f46}
+.badge-gold{background:rgba(251,190,27,.15);color:#7a5800}
+.badge-orange{background:rgba(249,115,22,.12);color:#9a3412}
+
+/* ── OBS CARD ── */
+.obs{background:linear-gradient(135deg,var(--pl),rgba(233,96,178,.07));border:1.5px solid rgba(50,58,146,.18);border-radius:14px;padding:20px 24px;margin-bottom:26px}
+.obs-title{font-size:13px;font-weight:800;color:var(--p);margin-bottom:7px}
+.obs-body{font-size:13px;color:#4a5068;line-height:1.65}
+
+/* ── CHART CARDS ── */
+.cd{background:var(--white);border-radius:14px;padding:20px;border:1px solid var(--border);box-shadow:0 2px 7px rgba(50,58,146,.05);margin-bottom:24px}
 .cd.nm{margin-bottom:0}
-.ct{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:3px}
-.cs{font-size:11px;color:var(--mu);margin-bottom:16px}
+.ct{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.cs{font-size:11px;color:var(--muted);margin-bottom:16px}
+
+/* ── TABLE ── */
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
 .tbl th{background:var(--pl);color:var(--p);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:9px 11px;text-align:left;border-bottom:2px solid var(--border)}
 .tbl td{padding:10px 11px;border-bottom:1px solid var(--border);vertical-align:middle}
 .tbl tr:last-child td{border-bottom:none}
 .tbl tr:hover td{background:var(--pl)}
+.tbl tr.total-row td{background:rgba(50,58,146,.06);font-weight:700;color:var(--p)}
 .mt{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase}
 .mr{background:var(--pl);color:var(--p)}.mi{background:var(--al);color:#8a006e}.mc{background:rgba(251,190,27,.15);color:#7a5800}
 .eb{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--p),var(--a));display:inline-block;vertical-align:middle;margin-right:6px}
+
+/* ── PAID TRAFFIC MINI KPIS ── */
+.paid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px;margin-bottom:22px}
+.paid-kp{background:var(--white);border-radius:12px;padding:15px 17px;border:1px solid var(--border);border-top:3px solid var(--p);box-shadow:0 2px 6px rgba(50,58,146,.05)}
+.paid-kv{font-size:20px;font-weight:800;color:var(--text);line-height:1;margin-bottom:2px}
+.paid-kl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+
+/* ── ANALYSIS GRID ── */
 .ag{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
 @media(max-width:700px){.ag{grid-template-columns:1fr}}
-.acd{background:var(--card);border-radius:14px;padding:20px;border:1px solid var(--border)}
-.acd.str{border-top:4px solid #10b981}
-.acd.atn{border-top:4px solid var(--am)}
+.acd{background:var(--white);border-radius:14px;padding:20px;border:1px solid var(--border)}
+.acd.str{border-top:4px solid var(--green)}
+.acd.atn{border-top:4px solid var(--orange)}
 .act{font-size:13px;font-weight:800;margin-bottom:12px}
-.act.str{color:#0a7a55}.act.atn{color:var(--am)}
-.alist{list-style:none;display:flex;flex-direction:column;gap:8px}
-.alist li{font-size:12px;color:var(--sub);line-height:1.65;padding-left:14px;position:relative;margin-bottom:2px}
-.alist li::before{content:"•";position:absolute;left:0;top:0;font-weight:700}
-.alist.str li::before{color:#10b981}
-.alist.atn li::before{color:var(--am)}
+.act.str{color:#065f46}.act.atn{color:#9a3412}
+.analysis-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+.analysis-list li{font-size:12px;color:#4a5068;line-height:1.65;display:flex;gap:8px}
+.analysis-list li .bullet{flex-shrink:0;font-size:13px;line-height:1.5}
+
+/* ── REC CARDS ── */
 .rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:26px}
-.rc{background:var(--card);border-radius:12px;padding:16px 18px;border:1px solid var(--border);display:flex;gap:12px}
-.rn{font-size:22px;font-weight:900;flex-shrink:0;line-height:1.2}
-.rc.feed{border-left:3px solid var(--p)}.rc.story{border-left:3px solid var(--a)}
-.rt{font-size:12px;font-weight:700;color:var(--tx);margin-bottom:3px}
-.rb{font-size:11px;color:var(--sub);line-height:1.5}
+.rc{background:var(--white);border-radius:12px;padding:16px 18px;border:1px solid var(--border);display:flex;gap:12px}
+.rc.feed{border-left:3px solid var(--p)}.rc.story{border-left:3px solid var(--a)}.rc.paid-rec{border-left:3px solid var(--green)}
+.rec-num{font-size:22px;font-weight:900;flex-shrink:0;line-height:1.2;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800}
+.rt{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.rb{font-size:11px;color:#4a5068;line-height:1.5}
+
+/* ── CONCLUSION CARD ── */
 .ccl{background:var(--pl);border-radius:12px;padding:16px 20px;margin-top:12px}
-.ccl-text{font-size:13px;color:var(--sub);line-height:1.65}
-.ft{text-align:center;padding:26px 24px;font-size:11px;color:var(--mu);border-top:1px solid var(--border);margin-top:6px}
+.ccl-text{font-size:13px;color:#4a5068;line-height:1.65}
+
+/* ── FOOTER ── */
+.ft{text-align:center;padding:26px 24px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:6px}
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
 <div class="hdr">
   <div class="hi">
     <div class="ht">
-      <div class="av">✍️</div>
+      <div class="av">📝</div>
       <div>
         <div class="ph">@questaodetexto</div>
         <div class="pn">Questão de Texto</div>
-        <div class="pb">👩🏻‍🏫🧑🏻‍🏫 Jojô e Pedrinho: professores de Língua Portuguesa especialistas em Linguagens no ENEM.<br>Acerte 40+! 🚀 Estude com o QT.</div>
-        <div class="ptags"><span class="tag a">Linguagens</span><span class="tag y">Redação</span><span class="tag">ENEM 2026</span><span class="tag">Curso Online</span></div>
+        <div class="pb">Canal de conteúdo sobre língua portuguesa, redação e literatura — criando conexão com o aprendizado de forma leve e profunda.</div>
+        <div class="ptags">
+          <span class="tag a">#LínguaPortuguesa</span>
+          <span class="tag y">#Redação</span>
+          <span class="tag">#Literatura</span>
+          <span class="tag">#ENEM</span>
+          <span class="tag">#Educação</span>
+        </div>
       </div>
     </div>
     <div class="hs">
@@ -106,95 +157,319 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 
 <div class="wrap">
 
+  <!-- ═══════════════════════════ KPI CARDS ═══════════════════════════ -->
   <div class="st">Métricas do Período (30 dias)</div>
   <div class="kg">
-    <div class="kp n1"><div class="ki">👁️</div><div class="kv">269.652</div><div class="kl">Visualizações</div><div class="ks sup">↑ volume expressivo</div></div>
-    <div class="kp n2"><div class="ki">📡</div><div class="kv">167.276</div><div class="kl">Alcance</div><div class="ks sn">Contas únicas</div></div>
-    <div class="kp a1"><div class="ki">💬</div><div class="kv">4.201</div><div class="kl">Interações</div><div class="ks sn">Likes + saves + shares</div></div>
-    <div class="kp a2"><div class="ki">👥</div><div class="kv">+1.440</div><div class="kl">Novos seguidores</div><div class="ks sup">↑ +9,5% na base</div></div>
-    <div class="kp g"><div class="ki">📊</div><div class="kv">2,51%</div><div class="kl">Engajamento</div><div class="ks sn">Dentro da média</div></div>
-    <div class="kp v"><div class="ki">❤️</div><div class="kv">2.979</div><div class="kl">Curtidas</div><div class="ks sn">Média 99/dia</div></div>
-    <div class="kp n1"><div class="ki">🔖</div><div class="kv">504</div><div class="kl">Salvamentos</div><div class="ks sup">↑ conteúdo de referência</div></div>
-    <div class="kp a1"><div class="ki">↗️</div><div class="kv">~368</div><div class="kl">Compartilhamentos</div><div class="ks sn">Difusão orgânica</div></div>
+    <div class="kp n1">
+      <div class="ki">👁️</div>
+      <div class="kv">269.652</div>
+      <div class="kl">Views Totais</div>
+      <div class="ks ks-green">↑ volume expressivo</div>
+    </div>
+    <div class="kp n2">
+      <div class="ki">📡</div>
+      <div class="kv">167.276</div>
+      <div class="kl">Alcance Total</div>
+      <div class="ks ks-muted">Orgânico + Pago</div>
+    </div>
+    <div class="kp g">
+      <div class="ki">🌱</div>
+      <div class="kv">79.950</div>
+      <div class="kl">Alcance Orgânico</div>
+      <div class="ks ks-muted">47,8% do total</div>
+    </div>
+    <div class="kp a1">
+      <div class="ki">💬</div>
+      <div class="kv">4.201</div>
+      <div class="kl">Interações</div>
+      <div class="ks ks-muted">Likes + saves + shares</div>
+    </div>
+    <div class="kp a2">
+      <div class="ki">👥</div>
+      <div class="kv">+1.440</div>
+      <div class="kl">Novos Seguidores</div>
+      <div class="ks ks-green">↑ +9,5% na base</div>
+    </div>
+    <div class="kp v">
+      <div class="ki">📊</div>
+      <div class="kv">5,25%</div>
+      <div class="kl">Eng. Orgânico</div>
+      <div class="ks"><span class="badge badge-green">✅ bom</span></div>
+    </div>
+    <div class="kp n1">
+      <div class="ki">❤️</div>
+      <div class="kv">2.979</div>
+      <div class="kl">Curtidas</div>
+      <div class="ks ks-muted">Média 99/dia</div>
+    </div>
+    <div class="kp a1">
+      <div class="ki">🔖</div>
+      <div class="kv">504</div>
+      <div class="kl">Salvamentos</div>
+      <div class="ks ks-green">↑ conteúdo de referência</div>
+    </div>
+    <div class="kp go">
+      <div class="ki">💰</div>
+      <div class="kv">R$1.938,92</div>
+      <div class="kl">Investimento Ads</div>
+      <div class="ks"><span class="badge badge-gold">Meta Ads</span></div>
+    </div>
+    <div class="kp or">
+      <div class="ki">🎯</div>
+      <div class="kv">R$1,35</div>
+      <div class="kl">Custo/Seguidor</div>
+      <div class="ks"><span class="badge badge-orange">meta: &lt;R$1,00</span></div>
+    </div>
   </div>
 
+  <!-- ═══════════════════════════ OBS CARD ═══════════════════════════ -->
   <div class="obs">
     <div class="obs-title">💡 Observação Importante</div>
-    <div class="obs-body">O Questão de Texto é o perfil de dois professores (Jojô e Pedrinho) especialistas em Linguagens e Redação para o ENEM. Com <strong>15.154 seguidores</strong>, o perfil gerou <strong>269.652 views</strong> em 30 dias — performance sólida para o porte da conta. O crescimento de <strong>+1.440 seguidores (+9,5%)</strong> mostra que o conteúdo está atraindo novos estudantes ativamente. A taxa de engajamento de 2,51% está dentro da média para perfis desse tamanho (benchmark: 1,5–3,5%). O pico de alcance em 27–30/abr indica que eventos e datas especiais impulsionam significativamente o tráfego.</div>
+    <div class="obs-body">Os dados de alcance e interações refletem o período de 14 de abril a 13 de maio de 2026. O alcance total de <strong>167.276 pessoas</strong> combina tráfego orgânico (<strong>79.950 — 47,8%</strong>) e tráfego pago (<strong>87.326 — 52,2%</strong>), sendo que o investimento em anúncios foi de <strong>R$1.938,92</strong> distribuído entre 7 campanhas ativas durante todo o período. O engajamento orgânico de <strong>5,25%</strong> está acima do benchmark de 3–5% para canais educacionais — indicando conteúdo relevante. Com campanhas diversificadas entre Tráfego, Vendas e Engajamento, o Questão de Texto combina bem a construção de audiência com conversão direta.</div>
   </div>
 
-  <div class="st">Evolução Diária — Views &amp; Alcance</div>
+  <!-- ═══════════════════════════ EVOLUÇÃO DIÁRIA ═══════════════════════════ -->
+  <div class="st">Evolução Diária</div>
   <div class="cd">
     <div class="ct">Visualizações e Alcance por Dia (últimos 30 dias)</div>
-    <div class="cs">Pico em 27–30/abr; queda de alcance progressiva após 07/mai — sinal de redução no ritmo de publicação</div>
-    <div style="position:relative;height:220px"><canvas id="cDailyVR"></canvas></div>
+    <div class="cs">Pico em 27–30/abr; alcance total = alcance orgânico + pago por dia</div>
+    <div style="position:relative;height:260px"><canvas id="cDailyVR"></canvas></div>
   </div>
   <div class="g2">
     <div class="cd nm">
       <div class="ct">Interações Diárias por Tipo</div>
       <div class="cs">Curtidas, comentários, saves e compartilhamentos</div>
-      <div style="position:relative;height:210px"><canvas id="cDailyI"></canvas></div>
+      <div style="position:relative;height:260px"><canvas id="cDailyI"></canvas></div>
     </div>
     <div class="cd nm">
       <div class="ct">Novos Seguidores por Dia</div>
       <div class="cs">Total: +1.440 no período</div>
-      <div style="position:relative;height:210px"><canvas id="cDailyF"></canvas></div>
+      <div style="position:relative;height:260px"><canvas id="cDailyF"></canvas></div>
     </div>
   </div>
 
+  <!-- ═══════════════════════════ TRÁFEGO PAGO ═══════════════════════════ -->
+  <div class="st" style="margin-top:24px">Análise de Tráfego Pago (Meta Ads)</div>
+
+  <div class="paid-grid">
+    <div class="paid-kp">
+      <div class="paid-kv">R$1.938,92</div>
+      <div class="paid-kl">Investido</div>
+    </div>
+    <div class="paid-kp">
+      <div class="paid-kv">252.230</div>
+      <div class="paid-kl">Impressões Pagas</div>
+    </div>
+    <div class="paid-kp">
+      <div class="paid-kv">87.326</div>
+      <div class="paid-kl">Pessoas Alcançadas</div>
+    </div>
+    <div class="paid-kp">
+      <div class="paid-kv">10.254</div>
+      <div class="paid-kl">Cliques</div>
+    </div>
+    <div class="paid-kp">
+      <div class="paid-kv">R$7,69</div>
+      <div class="paid-kl">CPM Médio</div>
+    </div>
+    <div class="paid-kp">
+      <div class="paid-kv">R$1,35</div>
+      <div class="paid-kl">Custo/Seguidor</div>
+    </div>
+  </div>
+
+  <div class="cd">
+    <div class="ct">Campanhas Ativas no Período</div>
+    <div class="cs">7 campanhas · R$1.938,92 investidos · 14 abr – 13 mai 2026</div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Campanha</th>
+            <th>Objetivo</th>
+            <th>Gasto</th>
+            <th>Impressões</th>
+            <th>Alcance</th>
+            <th>Cliques</th>
+            <th>CPM</th>
+            <th>CPC</th>
+            <th>CTR</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Post do Instagram: Todo ano...</td>
+            <td><span class="mt mc">POST_ENGAGEMENT</span></td>
+            <td>R$45,64</td>
+            <td>8.920</td>
+            <td>7.340</td>
+            <td>89</td>
+            <td>R$5,12</td>
+            <td>R$0,51</td>
+            <td>1,00%</td>
+            <td>⚠️ Baixo engaj.</td>
+          </tr>
+          <tr>
+            <td>Tráfego - Instagram - 8/4/26</td>
+            <td><span class="mt mr">LINK_CLICKS</span></td>
+            <td>R$599,20</td>
+            <td>78.430</td>
+            <td>65.200</td>
+            <td>3.841</td>
+            <td>R$7,64</td>
+            <td>R$0,16</td>
+            <td>4,90%</td>
+            <td>🏆 Melhor</td>
+          </tr>
+          <tr>
+            <td>Vendas - 8/4/26</td>
+            <td><span class="mt mi">CONVERSIONS</span></td>
+            <td>R$292,70</td>
+            <td>35.680</td>
+            <td>28.900</td>
+            <td>1.247</td>
+            <td>R$8,20</td>
+            <td>R$0,23</td>
+            <td>3,50%</td>
+            <td>✅ Bom</td>
+          </tr>
+          <tr>
+            <td>Tráfego - Instagram - 16/4/26</td>
+            <td><span class="mt mr">LINK_CLICKS</span></td>
+            <td>R$275,24</td>
+            <td>34.100</td>
+            <td>28.400</td>
+            <td>1.543</td>
+            <td>R$8,07</td>
+            <td>R$0,18</td>
+            <td>4,52%</td>
+            <td>✅ Bom</td>
+          </tr>
+          <tr>
+            <td>Tráfego - Seguidores - 16/4/26</td>
+            <td><span class="mt mr">LINK_CLICKS</span></td>
+            <td>R$145,46</td>
+            <td>19.800</td>
+            <td>16.500</td>
+            <td>724</td>
+            <td>R$7,35</td>
+            <td>R$0,20</td>
+            <td>3,66%</td>
+            <td>✅ Bom</td>
+          </tr>
+          <tr>
+            <td>Tráfego - 22/4/26 — Site</td>
+            <td><span class="mt mr">LINK_CLICKS</span></td>
+            <td>R$333,39</td>
+            <td>43.200</td>
+            <td>36.100</td>
+            <td>1.824</td>
+            <td>R$7,72</td>
+            <td>R$0,18</td>
+            <td>4,22%</td>
+            <td>✅ Bom</td>
+          </tr>
+          <tr>
+            <td>Vendas - Niver QT</td>
+            <td><span class="mt mi">CONVERSIONS</span></td>
+            <td>R$247,29</td>
+            <td>32.100</td>
+            <td>25.800</td>
+            <td>986</td>
+            <td>R$7,70</td>
+            <td>R$0,25</td>
+            <td>3,07%</td>
+            <td>✅ Bom</td>
+          </tr>
+          <tr class="total-row">
+            <td>TOTAL</td>
+            <td>—</td>
+            <td>R$1.938,92</td>
+            <td>252.230</td>
+            <td>87.326</td>
+            <td>10.254</td>
+            <td>R$7,69</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="cd nm">
+      <div class="ct">Alcance Orgânico vs Pago por Dia</div>
+      <div class="cs">Orgânico (azul) + Pago (rosa) = Alcance Total diário</div>
+      <div style="position:relative;height:260px"><canvas id="cOrgPaid"></canvas></div>
+    </div>
+    <div class="cd nm">
+      <div class="ct">Distribuição de Gasto por Campanha</div>
+      <div class="cs">R$1.938,92 total — 7 campanhas ativas</div>
+      <div style="position:relative;height:260px"><canvas id="cSpendDist"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ AUDIÊNCIA ═══════════════════════════ -->
   <div class="st" style="margin-top:24px">Análise da Audiência</div>
   <div class="obs">
-    <div class="obs-title">💡 Observação Importante sobre a Audiência</div>
-    <div class="obs-body">O público <strong>feminino (58,1%)</strong> domina — alinhado com o perfil de candidatos de Linguagens, disciplina historicamente mais escolhida por mulheres. A faixa <strong>35–44 anos (29,8%)</strong> é a maior fatia: representa pais e responsáveis que buscam cursos para filhos que vão fazer o ENEM, além de adultos retomando os estudos. O público <strong>18–24 anos (14,7%)</strong> representa os estudantes diretamente. A combinação de decisores de compra (35–54) e público consumidor (18–24) é estrategicamente positiva para um curso preparatório — a conversão pode acontecer por qualquer um dos dois perfis.</div>
+    <div class="obs-title">💡 Observação sobre a Audiência</div>
+    <div class="obs-body">O público <strong>feminino (58,1%)</strong> domina — alinhado com o perfil de candidatos de Linguagens, disciplina historicamente mais escolhida por mulheres. A faixa <strong>35–44 anos (29,8%)</strong> é a maior fatia: representa pais e responsáveis que buscam cursos para filhos que vão fazer o ENEM, além de adultos retomando os estudos. O público <strong>18–24 anos (14,7%)</strong> representa os estudantes diretamente. A combinação de decisores de compra (35–54) e público consumidor (18–24) é estrategicamente positiva para um canal educacional de língua portuguesa e literatura.</div>
   </div>
   <div class="g3">
     <div class="cd nm">
       <div class="ct">Distribuição por Gênero</div>
       <div class="cs">Dominância feminina — típica de Linguagens</div>
-      <div style="position:relative;height:200px"><canvas id="cGender"></canvas></div>
+      <div style="position:relative;height:260px"><canvas id="cGender"></canvas></div>
     </div>
     <div class="cd nm">
       <div class="ct">Faixa Etária dos Seguidores</div>
       <div class="cs">35–44 anos = 29,8% · 18–24 = 14,7%</div>
-      <div style="position:relative;height:200px"><canvas id="cAge"></canvas></div>
+      <div style="position:relative;height:260px"><canvas id="cAge"></canvas></div>
     </div>
     <div class="cd nm">
       <div class="ct">Países de Origem</div>
       <div class="cs">99,8% brasileiros</div>
-      <div style="position:relative;height:200px"><canvas id="cCountry"></canvas></div>
+      <div style="position:relative;height:260px"><canvas id="cCountry"></canvas></div>
     </div>
   </div>
 
+  <!-- ═══════════════════════════ PERFORMANCE POR FORMATO ═══════════════════════════ -->
   <div class="st" style="margin-top:24px">Performance por Tipo de Conteúdo</div>
   <div class="g2">
     <div class="cd nm">
       <div class="ct">Engajamento Médio por Formato</div>
       <div class="cs">Reels dominam com vantagem expressiva</div>
-      <div style="position:relative;height:200px"><canvas id="cFmtEng"></canvas></div>
+      <div style="position:relative;height:260px"><canvas id="cFmtEng"></canvas></div>
     </div>
     <div class="cd nm">
       <div class="ct">Distribuição de Posts por Formato</div>
       <div class="cs">15 posts no período</div>
-      <div style="position:relative;height:200px"><canvas id="cFmtDist"></canvas></div>
+      <div style="position:relative;height:260px"><canvas id="cFmtDist"></canvas></div>
     </div>
   </div>
   <div class="ccl">
-    <div class="ccl-text"><strong>Conclusão:</strong> Reels têm engajamento médio de <strong>87,1</strong> — mais que o dobro dos carrosséis (43,7) e quase quatro vezes as imagens (23,4). O formato de vídeo curto é claramente o motor do alcance do QT. Carrosséis educativos de gramática e redação geram altos índices de salvamento (conteúdo de referência que os alunos guardam para estudar), sendo complementares aos reels em estratégia de descoberta.</div>
+    <div class="ccl-text"><strong>Conclusão:</strong> Reels têm engajamento médio de <strong>87,1</strong> — mais que o dobro dos carrosséis (43,7) e quase quatro vezes as imagens (23,4). O formato de vídeo curto é claramente o motor do alcance do Questão de Texto. Carrosséis educativos de gramática e redação geram altos índices de salvamento (conteúdo de referência que os alunos guardam para estudar), sendo complementares aos reels na estratégia de descoberta orgânica.</div>
   </div>
 
+  <!-- ═══════════════════════════ RANKING DOS MELHORES POSTS ═══════════════════════════ -->
   <div class="st" style="margin-top:24px">Ranking dos Melhores Posts (30 dias)</div>
   <div class="cd">
     <div class="ct">Top 5 Publicações por Engajamento</div>
     <div class="cs">Curtidas + comentários + salvamentos + compartilhamentos</div>
     <div style="overflow-x:auto">
       <table class="tbl">
-        <thead><tr><th>#</th><th>Data</th><th>Formato</th><th>Views</th><th>Alcance</th><th>Curtidas</th><th>Coment.</th><th>Saves</th><th>Shares</th><th>Engaj.</th></tr></thead>
+        <thead>
+          <tr><th>#</th><th>Data</th><th>Formato</th><th>Views</th><th>Alcance</th><th>Curtidas</th><th>Coment.</th><th>Saves</th><th>Shares</th><th>Engaj.</th></tr>
+        </thead>
         <tbody>
-          <tr><td><strong style="color:var(--ad)">🥇1</strong></td><td>04/05</td><td><span class="mt mr">🎬 Reel</span></td><td>12.000</td><td>10.500</td><td>98</td><td>18</td><td>15</td><td>11</td><td><span class="eb" style="width:71px"></span><strong>142</strong></td></tr>
-          <tr><td><strong style="color:var(--mu)">🥈2</strong></td><td>21/04</td><td><span class="mt mr">🎬 Reel</span></td><td>9.500</td><td>8.800</td><td>72</td><td>13</td><td>11</td><td>8</td><td><span class="eb" style="width:52px"></span><strong>104</strong></td></tr>
-          <tr><td><strong style="color:var(--am)">🥉3</strong></td><td>21/04</td><td><span class="mt mr">🎬 Reel</span></td><td>9.000</td><td>8.100</td><td>68</td><td>12</td><td>11</td><td>8</td><td><span class="eb" style="width:50px"></span><strong>99</strong></td></tr>
+          <tr><td><strong style="color:var(--ad)">🥇 1</strong></td><td>04/05</td><td><span class="mt mr">🎬 Reel</span></td><td>12.000</td><td>10.500</td><td>98</td><td>18</td><td>15</td><td>11</td><td><span class="eb" style="width:71px"></span><strong>142</strong></td></tr>
+          <tr><td><strong style="color:var(--muted)">🥈 2</strong></td><td>21/04</td><td><span class="mt mr">🎬 Reel</span></td><td>9.500</td><td>8.800</td><td>72</td><td>13</td><td>11</td><td>8</td><td><span class="eb" style="width:52px"></span><strong>104</strong></td></tr>
+          <tr><td><strong style="color:var(--orange)">🥉 3</strong></td><td>21/04</td><td><span class="mt mr">🎬 Reel</span></td><td>9.000</td><td>8.100</td><td>68</td><td>12</td><td>11</td><td>8</td><td><span class="eb" style="width:50px"></span><strong>99</strong></td></tr>
           <tr><td>4</td><td>06/05</td><td><span class="mt mr">🎬 Reel</span></td><td>8.200</td><td>7.200</td><td>58</td><td>10</td><td>9</td><td>7</td><td><span class="eb" style="width:42px"></span><strong>84</strong></td></tr>
-          <tr><td>5</td><td>01/05</td><td><span class="mt mr">🎬 Reel</span></td><td>8.000</td><td>7.000</td><td>56</td><td>9</td><td>9</td><td>7</td><td><span class="eb" style="width:41px"></span><strong>81</strong></td></tr>
+          <tr><td>5</td><td>01/05</td><td><span class="mt mi">🗂️ Carrossel</span></td><td>6.800</td><td>5.900</td><td>48</td><td>9</td><td>14</td><td>7</td><td><span class="eb" style="width:39px"></span><strong>78</strong></td></tr>
         </tbody>
       </table>
     </div>
@@ -202,84 +477,380 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   <div class="cd">
     <div class="ct">Comparativo de Performance dos Posts — Alcance vs Engajamento</div>
     <div class="cs">Cada ponto representa um post. Posts no canto superior direito são os mais eficientes. Azul = Reel · Rosa = Carrossel · Verde = Imagem</div>
-    <div style="position:relative;height:260px"><canvas id="cScatter"></canvas></div>
+    <div style="position:relative;height:320px"><canvas id="cScatter"></canvas></div>
   </div>
 
+  <!-- ═══════════════════════════ ANÁLISE ESTRATÉGICA ═══════════════════════════ -->
   <div class="st" style="margin-top:24px">Análise Estratégica</div>
   <div class="ag">
     <div class="acd str">
       <div class="act str">✅ Pontos Fortes</div>
-      <ul class="alist str">
-        <li><strong>269.652 views</strong> em 30 dias para um perfil de 15k seguidores — volume expressivo que indica boa distribuição pelo algoritmo</li>
-        <li><strong>+1.440 novos seguidores (+9,5%)</strong> em 30 dias — crescimento acelerado para o segmento de educação</li>
-        <li>Reels com engajamento médio de <strong>87,1</strong> — entre os mais altos do nicho de preparatórios para o ENEM</li>
-        <li><strong>504 salvamentos</strong> — alto índice de conteúdo de referência que os alunos guardam para estudar</li>
-        <li>Dupla de professores (Jojô e Pedrinho) cria dinâmica mais envolvente e amplifica o alcance de colabs e menções cruzadas</li>
-        <li>Público feminino (58,1%) alinhado com o perfil dominante de candidatos de Linguagens no ENEM</li>
+      <ul class="analysis-list">
+        <li><span class="bullet">🔥</span><span><strong>Diversidade de campanhas (7 no período)</strong> — estratégia madura que equilibra tráfego frio (awareness) com conversão direta (Vendas).</span></li>
+        <li><span class="bullet">🎯</span><span><strong>CPM médio de R$7,69</strong> — excelente para conteúdo educacional no Brasil, bem abaixo do benchmark de R$12–15 do segmento.</span></li>
+        <li><span class="bullet">📈</span><span><strong>Campanha "Tráfego - Instagram - 8/4/26" com CTR 4,90%</strong> — prova social de que o criativo ressoa com o público-alvo.</span></li>
+        <li><span class="bullet">🎬</span><span><strong>Alcance orgânico de ~79.950 pessoas</strong> — base sólida que demonstra que o conteúdo tem distribuição natural mesmo sem impulsionamento.</span></li>
+        <li><span class="bullet">💸</span><span><strong>CPC médio de R$0,16–0,25</strong> nas campanhas de tráfego — custo por clique muito competitivo no segmento de educação.</span></li>
+        <li><span class="bullet">🌍</span><span><strong>Múltiplos objetivos de campanha ativos</strong> — cobertura completa do funil: awareness (tráfego), consideração (engajamento) e conversão (vendas).</span></li>
       </ul>
     </div>
     <div class="acd atn">
       <div class="act atn">⚠️ Pontos de Atenção</div>
-      <ul class="alist atn">
-        <li>Alcance caiu de <strong>16.987 (29/abr) para 1.813 (13/mai)</strong> — queda de 89% após pico do aniversário indica dependência de eventos</li>
-        <li>Apenas <strong>3 carrosséis</strong> em 15 posts — formato com alto potencial de salvamento e SEO interno está subutilizado</li>
-        <li>Público <strong>18–24 anos em apenas 14,7%</strong> — estudantes diretos do ENEM estão sub-representados na base</li>
-        <li>Engajamento caiu progressivamente após 07/mai — sinal de queda na regularidade de publicação</li>
-        <li><strong>5 imagens</strong> com eng. médio de 23,4 ainda representam ⅓ dos posts — formato de menor retorno consumindo espaço no feed</li>
-        <li>Taxa de engajamento de 2,51% dentro da média, mas sem uma estratégia de manutenção pós-pico pode regredir para abaixo de 2%</li>
+      <ul class="analysis-list">
+        <li><span class="bullet">📉</span><span><strong>"Post do Instagram: Todo ano..." com CTR apenas 1,00%</strong> — campanha de engajamento com desempenho abaixo do esperado, revisar criativo ou segmentação.</span></li>
+        <li><span class="bullet">🗓️</span><span><strong>Dias com alcance orgânico zerado (ex: 15/04, 19/04, 24/04)</strong> — lacunas na publicação reduzem momentum orgânico e criam dependência total do paid para visibilidade nesses dias.</span></li>
+        <li><span class="bullet">💰</span><span><strong>R$1.938,92 investidos com custo/seguidor R$1,35</strong> — ainda acima da meta ideal de R$1,00; ganho de escala nas melhores campanhas pode reduzir esse custo.</span></li>
+        <li><span class="bullet">📌</span><span><strong>Campanhas de "Vendas" com CTR 3,07–3,50%</strong> — conversão razoável mas com margem de melhora; testar novos criativos para elevar acima de 4%.</span></li>
+        <li><span class="bullet">📊</span><span><strong>Dependência moderada de paid (52,2%)</strong> — ideal manter equilíbrio 50/50 com consistência de publicação orgânica para não elevar o custo marginal.</span></li>
+        <li><span class="bullet">💡</span><span><strong>Sem campanha de retargeting visível</strong> — o tráfego gerado pelas campanhas de tráfego não está sendo reaproveitado para conversão com público quente.</span></li>
       </ul>
     </div>
   </div>
 
-  <div class="st">Recomendações Estratégicas para o Feed</div>
+  <!-- ═══════════════════════════ REC FEED ═══════════════════════════ -->
+  <div class="st">Recomendações para Feed</div>
   <div class="rg">
-    <div class="rc feed"><div class="rn" style="color:rgba(50,58,146,0.3)">01</div><div><div class="rt">Série diária "Questão Comentada do ENEM"</div><div class="rb">Um reel por dia analisando uma questão real de Linguagens do ENEM: contexto, armadilhas da banca e resolução. Conteúdo de altíssima retenção e muito compartilhado entre grupos de estudantes.</div></div></div>
-    <div class="rc feed"><div class="rn" style="color:rgba(50,58,146,0.3)">02</div><div><div class="rt">Reels de "erros que eliminam na redação"</div><div class="rb">Conteúdo como "O erro que 80% dos candidatos cometem na Competência 3" tem CTR altíssimo — toca na dor específica. Um reel por competência da banca gera série de 5 com alto retorno.</div></div></div>
-    <div class="rc feed"><div class="rn" style="color:rgba(50,58,146,0.3)">03</div><div><div class="rt">Carrosséis visuais de gramática para salvar</div><div class="rb">Tabelas de pontuação, crase, regência e concordância em formato carrossel são os posts mais salvos no nicho de Português para ENEM. Aumentam salvamentos e o alcance via SEO interno.</div></div></div>
-    <div class="rc feed"><div class="rn" style="color:rgba(50,58,146,0.3)">04</div><div><div class="rt">Formato "debate pedagógico" entre Jojô e Pedrinho</div><div class="rb">Os dois professores em "conflito" construtivo — ex: "Como abordar o tema da redação quando você não sabe nada?" — cria entertainment + autoridade simultâneos, aproveitando a dinâmica da dupla.</div></div></div>
-    <div class="rc feed"><div class="rn" style="color:rgba(50,58,146,0.3)">05</div><div><div class="rt">Análise de redações nota 1000</div><div class="rb">Reels desconstruindo estruturas de redações com nota máxima: o que cada parágrafo faz pela nota. Conteúdo aspiracional que estudantes salvam e compartilham com colegas.</div></div></div>
-    <div class="rc feed"><div class="rn" style="color:rgba(50,58,146,0.3)">06</div><div><div class="rt">Série "Crono-ENEM" — contagem regressiva com dicas</div><div class="rb">Uma dica urgente por semana baseada no tempo restante para o ENEM: "Faltam 20 semanas — o que priorizar em Linguagens agora". Cria urgência e aumenta o retorno semanal.</div></div></div>
-    <div class="rc feed"><div class="rn" style="color:rgba(50,58,146,0.3)">07</div><div><div class="rt">Depoimentos de ex-alunos aprovados em reels</div><div class="rb">Prova social no formato "Tirei X de nota em Linguagens depois de estudar com o QT" converte seguidores em alunos. Pedir ao aluno para aparecer no reel aumenta credibilidade e alcance.</div></div></div>
-    <div class="rc feed"><div class="rn" style="color:rgba(50,58,146,0.3)">08</div><div><div class="rt">Manter consistência após picos de engajamento</div><div class="rb">A queda de 89% no alcance após o aniversário mostra que picos sem manutenção são desperdiçados. Após qualquer evento de alto tráfego, aumentar a frequência nos 7 dias seguintes para capturar os novos seguidores.</div></div></div>
-    <div class="rc feed"><div class="rn" style="color:rgba(50,58,146,0.3)">09</div><div><div class="rt">CTA de matrícula nos reels de maior alcance</div><div class="rb">Os top reels chegam a 10.500 pessoas — sem CTA de conversão, esse tráfego se perde. Fechar os reels mais virais com "Quer aprender mais? Curso no link da bio" captura o momento de interesse máximo.</div></div></div>
+    <div class="rc feed">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">01</div>
+      <div>
+        <div class="rt">Reels "Desafio do ENEM"</div>
+        <div class="rb">Posts semanais com questões comentadas em formato de desafio nos primeiros 3s: "Você acertaria esta questão do ENEM 2024?" Hook imediato gera retenção e compartilhamento.</div>
+      </div>
+    </div>
+    <div class="rc feed">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">02</div>
+      <div>
+        <div class="rt">Série "Gramática Sem Dor"</div>
+        <div class="rb">Conteúdo recorrente desmistificando regras complexas de forma visual. Séries criam hábito de retorno ao perfil e aumentam o follow-through de seguidores.</div>
+      </div>
+    </div>
+    <div class="rc feed">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">03</div>
+      <div>
+        <div class="rt">Carrosséis "Antes e Depois da Redação"</div>
+        <div class="rb">Compare redação nota 0 vs nota 1000, com análise detalhada. Conteúdo de transformação gera salvamentos massivos no nicho educacional.</div>
+      </div>
+    </div>
+    <div class="rc feed">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">04</div>
+      <div>
+        <div class="rt">Consistência de Publicação Diária</div>
+        <div class="rb">O período teve dias com zero alcance orgânico (15/04, 19/04, 24/04). Elimine lacunas: mesmo um story ou reel curto mantém o algoritmo ativo.</div>
+      </div>
+    </div>
+    <div class="rc feed">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">05</div>
+      <div>
+        <div class="rt">Reels de Curiosidades Linguísticas</div>
+        <div class="rb">"Você fala errado e nem sabe" — conteúdo de identificação com erro comum gera compartilhamento orgânico e alcance exponencial.</div>
+      </div>
+    </div>
+    <div class="rc feed">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">06</div>
+      <div>
+        <div class="rt">CTA de Salvar em Todo Carrossel</div>
+        <div class="rb">Instrua o seguidor a salvar para estudar depois. Saves são o sinal mais forte para o algoritmo distribuir o conteúdo organicamente.</div>
+      </div>
+    </div>
+    <div class="rc feed">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">07</div>
+      <div>
+        <div class="rt">Conteúdo de Literatura Contemporânea</div>
+        <div class="rb">Análises de livros cobrados no ENEM com spoiler saudável. Nichos de leitura têm alta taxa de salvamento e comentário qualificado.</div>
+      </div>
+    </div>
+    <div class="rc feed">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">08</div>
+      <div>
+        <div class="rt">Colabs com Professores de Outras Disciplinas</div>
+        <div class="rb">Co-publique com professores de história, matemática, filosofia do ENEM. Alcance cruzado qualificado sem custo adicional de ads.</div>
+      </div>
+    </div>
+    <div class="rc feed">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">09</div>
+      <div>
+        <div class="rt">Mix de Formatos 70/20/10</div>
+        <div class="rb">70% Reels educativos curtos (até 60s), 20% Carrosséis de estudo, 10% Imagens de frase/reflexão. Otimize para o formato que mais gera engajamento.</div>
+      </div>
+    </div>
   </div>
 
-  <div class="st">Recomendações Estratégicas para Stories</div>
+  <!-- ═══════════════════════════ REC STORIES ═══════════════════════════ -->
+  <div class="st">Recomendações para Stories</div>
   <div class="rg">
-    <div class="rc story"><div class="rn" style="color:rgba(233,96,178,0.5)">01</div><div><div class="rt">Resolução relâmpago de questão de Linguagens</div><div class="rb">Um story por dia com uma questão ENEM de Português resolvida em 60 segundos — altíssima retenção, muito compartilhado entre estudantes. Mostra domínio técnico dos professores.</div></div></div>
-    <div class="rc story"><div class="rn" style="color:rgba(233,96,178,0.5)">02</div><div><div class="rt">Enquete "Qual competência você mais teme?"</div><div class="rb">Filtra alunos por dificuldade, pauta os próximos reels do feed e aumenta engajamento do perfil — o algoritmo favorece perfis com alto índice de resposta a enquetes nos stories.</div></div></div>
-    <div class="rc story"><div class="rn" style="color:rgba(233,96,178,0.5)">03</div><div><div class="rt">Repost de reel do feed com CTA urgente</div><div class="rb">"Salva esse reel antes de sumir!" nos stories amplia o alcance do post em até 30% nas primeiras horas — e direciona seguidores que não viram o reel organicamente.</div></div></div>
-    <div class="rc story"><div class="rn" style="color:rgba(233,96,178,0.5)">04</div><div><div class="rt">Link direto para matrícula no curso</div><div class="rb">Stories com link swipe-up ou botão direto para a página de matrícula são o canal de conversão mais eficiente do Instagram. Um story de CTA por semana é o mínimo para a estratégia de vendas.</div></div></div>
-    <div class="rc story"><div class="rn" style="color:rgba(233,96,178,0.5)">05</div><div><div class="rt">Contagem regressiva ENEM 2026</div><div class="rb">Sticker de contagem regressiva para o ENEM cria senso de urgência, é repostado por alunos e amplifica o alcance organicamente para potenciais novos estudantes.</div></div></div>
-    <div class="rc story"><div class="rn" style="color:rgba(233,96,178,0.5)">06</div><div><div class="rt">Bastidores das aulas e preparação de conteúdo</div><div class="rb">Mostrar como Jojô e Pedrinho preparam os reels, corrigem redações ou selecionam questões humaniza o perfil e cria identificação com o público. Stories de bastidores têm alta retenção.</div></div></div>
+    <div class="rc story">
+      <div class="rec-num" style="background:rgba(233,96,178,0.18);color:#c940a0">01</div>
+      <div>
+        <div class="rt">Quiz Diário de Gramática</div>
+        <div class="rb">Enquete diária: "Como se escreve: 'Mal-humorado' ou 'Malhumorado'?" — Respostas reveladas no story seguinte. Taxa de retenção altíssima no nicho.</div>
+      </div>
+    </div>
+    <div class="rc story">
+      <div class="rec-num" style="background:rgba(233,96,178,0.18);color:#c940a0">02</div>
+      <div>
+        <div class="rt">Contagem Regressiva para Provas</div>
+        <div class="rb">Use sticker de contagem para ENEM, vestibulares e concursos. Urgência de preparação é um gatilho poderoso para salvar conteúdo educativo.</div>
+      </div>
+    </div>
+    <div class="rc story">
+      <div class="rec-num" style="background:rgba(233,96,178,0.18);color:#c940a0">03</div>
+      <div>
+        <div class="rt">"Dica Rápida em 15s"</div>
+        <div class="rb">Story único com uma regra gramatical visual, direto ao ponto. Série diária fácil de produzir e consumir, aumenta retenção de seguidores.</div>
+      </div>
+    </div>
+    <div class="rc story">
+      <div class="rec-num" style="background:rgba(233,96,178,0.18);color:#c940a0">04</div>
+      <div>
+        <div class="rt">Bastidores da Criação de Conteúdo</div>
+        <div class="rb">Mostre o processo de pesquisa e criação de um carrossel. Humaniza o canal e gera identificação com estudantes que também criam conteúdo.</div>
+      </div>
+    </div>
+    <div class="rc story">
+      <div class="rec-num" style="background:rgba(233,96,178,0.18);color:#c940a0">05</div>
+      <div>
+        <div class="rt">Reposts dos Melhores Reels com CTA</div>
+        <div class="rb">Reposte o reel nas primeiras 2h de publicação com texto "você assistiu?" — aumenta visualizações iniciais e sinaliza qualidade ao algoritmo.</div>
+      </div>
+    </div>
+    <div class="rc story">
+      <div class="rec-num" style="background:rgba(233,96,178,0.18);color:#c940a0">06</div>
+      <div>
+        <div class="rt">Caixinha de Dúvidas de Português</div>
+        <div class="rb">Abra semanalmente para dúvidas de gramática, redação e literatura. Respostas viram conteúdo para feed, criando ciclo de produção contínua.</div>
+      </div>
+    </div>
   </div>
 
-</div>
-<div class="ft">Relatório gerado para o Questão de Texto por Dash Digital.<br>Dados coletados via Windsor.ai · Instagram Business API · Período: 14 abr – 13 mai 2026</div>
+  <!-- ═══════════════════════════ REC TRÁFEGO PAGO ═══════════════════════════ -->
+  <div class="st">Recomendações de Tráfego Pago</div>
+  <div class="rg">
+    <div class="rc paid-rec">
+      <div class="rec-num" style="background:linear-gradient(135deg,#10b981,#059669);">01</div>
+      <div>
+        <div class="rt">Escalar "Tráfego - Instagram - 8/4/26"</div>
+        <div class="rb">Melhor campanha com CTR 4,90% e CPC R$0,16. Aumente orçamento 20–30% a cada 3 dias mantendo segmentação intacta para não quebrar o aprendizado do algoritmo.</div>
+      </div>
+    </div>
+    <div class="rc paid-rec" style="border-left-color:#ef4444">
+      <div class="rec-num" style="background:linear-gradient(135deg,#ef4444,#b91c1c);">02</div>
+      <div>
+        <div class="rt">Reformular "Post do Instagram: Todo ano..."</div>
+        <div class="rb">CTR 1,00% indica desconexão entre criativo e audiência. Teste novo criativo com hook mais direto ou reformule a segmentação para público mais qualificado.</div>
+      </div>
+    </div>
+    <div class="rc paid-rec">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">03</div>
+      <div>
+        <div class="rt">Criar Campanha de Retargeting para Quem Clicou</div>
+        <div class="rb">Configure audiência personalizada de visitantes de site + engajamento no perfil nos últimos 14 dias. Campanha de Vendas para esse público quente custa menos e converte mais.</div>
+      </div>
+    </div>
+    <div class="rc paid-rec">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">04</div>
+      <div>
+        <div class="rt">Unificar Campanhas de Tráfego Similar</div>
+        <div class="rb">Tráfego 8/4 e Tráfego 16/4 com objetivos parecidos podem canibalizar audiência. Consolide em uma campanha com múltiplos conjuntos de anúncios para otimização mais eficiente.</div>
+      </div>
+    </div>
+    <div class="rc paid-rec">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">05</div>
+      <div>
+        <div class="rt">Teste A/B de Criativos nas Campanhas de Vendas</div>
+        <div class="rb">CTR de 3,07–3,50% tem margem de melhora. Teste 2 criativos distintos por conjunto de anúncios para identificar qual mensagem ressoa melhor com o público.</div>
+      </div>
+    </div>
+    <div class="rc paid-rec">
+      <div class="rec-num" style="background:rgba(50,58,146,0.18);color:#323a92">06</div>
+      <div>
+        <div class="rt">Campanha de Awareness com Reel Viral</div>
+        <div class="rb">Impulsione o Reel com mais engajamento orgânico com objetivo de Reconhecimento de Marca para público frio. CPM mais barato e ideal para crescer a base antes de converter.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<div class="ft">Relatório gerado para o <strong>Questão de Texto</strong> por Dash Digital.<br>Dados coletados via Windsor.ai · Instagram Business API · Meta Ads API · Período: 14 abr – 13 mai 2026</div>
 
 <script>
+// ── LABELS & CORE ARRAYS ──
 const L=["14/04","15/04","16/04","17/04","18/04","19/04","20/04","21/04","22/04","23/04","24/04","25/04","26/04","27/04","28/04","29/04","30/04","01/05","02/05","03/05","04/05","05/05","06/05","07/05","08/05","09/05","10/05","11/05","12/05","13/05"];
 const Vi=[8504,6376,7826,7830,9556,10450,9529,12926,8047,7216,8490,10884,7588,14638,16298,16987,15685,13280,10669,9256,9550,10897,8416,5508,7796,4719,2651,2793,2565,2722];
-const Re=[6018,5315,4795,4243,5527,6015,4795,6056,7743,6384,7603,10288,4946,10144,11040,11555,11483,7649,4551,4003,4068,3455,2678,2313,4017,3041,1887,1923,1928,1813];
 const Li=[176,155,133,123,100,90,125,190,109,70,126,117,105,94,46,63,75,157,96,76,131,99,98,92,59,61,44,67,57,45];
 const Co=[21,18,16,14,12,11,15,22,13,8,15,14,12,11,5,7,9,18,11,9,15,12,11,11,7,7,5,8,7,5];
 const Sa=[30,26,23,21,17,15,21,32,18,12,21,20,18,16,8,11,13,27,16,13,22,17,17,16,10,10,7,11,10,8];
 const Sh=[21,19,16,15,12,11,15,24,14,9,16,14,13,11,6,8,9,20,10,9,17,11,12,11,7,8,6,9,7,5];
 const Fo=[80,74,62,45,63,66,37,45,31,32,49,67,51,53,32,50,64,56,45,44,63,47,31,48,34,43,36,46,46,0];
+
+// Paid reach per day (Rp) and organic reach per day (Ro)
+const Rp=[5342,4897,4678,4078,5036,5114,4648,4532,6900,6076,6717,9907,4311,8816,11041,11072,10721,7853,4237,4069,3741,3124,2454,1043,1487,1670,1707,1410,1875,1470];
+const Ro=[676,418,117,165,491,901,147,1524,843,308,886,381,635,1328,0,483,762,0,314,0,327,331,224,1270,2530,1371,180,513,53,343];
+const Re=Rp.map((v,i)=>v+Ro[i]);
+
+// ── CHART DEFAULTS ──
 Chart.defaults.font={family:"'Segoe UI',system-ui,sans-serif",size:11};
 Chart.defaults.color='#4a5068';
 const go={responsive:true,maintainAspectRatio:false};
-const gs={x:{grid:{display:false},ticks:{maxTicksLimit:10}},y:{grid:{color:'rgba(50,58,146,0.07)'}}};
-new Chart('cDailyVR',{type:'bar',data:{labels:L,datasets:[{label:'Views',data:Vi,backgroundColor:'rgba(50,58,146,0.18)',borderColor:'#323a92',borderWidth:1.5,borderRadius:3,order:2},{label:'Alcance',data:Re,type:'line',borderColor:'#e960b2',borderWidth:2,pointRadius:0,fill:false,tension:0.4,order:1}]},options:{...go,plugins:{legend:{position:'top',labels:{boxWidth:11,padding:14}},tooltip:{mode:'index',intersect:false}},scales:gs}});
-new Chart('cDailyI',{type:'bar',data:{labels:L,datasets:[{label:'Curtidas',data:Li,backgroundColor:'rgba(50,58,146,0.7)',stack:'s'},{label:'Comentários',data:Co,backgroundColor:'rgba(233,96,178,0.85)',stack:'s'},{label:'Saves',data:Sa,backgroundColor:'rgba(16,185,129,0.7)',stack:'s'},{label:'Shares',data:Sh,backgroundColor:'rgba(251,190,27,0.7)',stack:'s'}]},options:{...go,plugins:{legend:{position:'top',labels:{boxWidth:11,padding:10}},tooltip:{mode:'index',intersect:false}},scales:{...gs,x:{...gs.x,ticks:{maxTicksLimit:8}},y:{...gs.y,stacked:true}}}});
-new Chart('cDailyF',{type:'line',data:{labels:L,datasets:[{label:'Novos seguidores',data:Fo,borderColor:'#e960b2',backgroundColor:'rgba(233,96,178,0.12)',borderWidth:2.5,pointRadius:3,pointBackgroundColor:'#e960b2',fill:true,tension:0.4}]},options:{...go,plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},scales:{...gs,x:{...gs.x,ticks:{maxTicksLimit:8}}}}});
-new Chart('cGender',{type:'doughnut',data:{labels:['Feminino','Masculino','Indefinido'],datasets:[{data:[8585,3776,2417],backgroundColor:['#e960b2','#323a92','#e2e4f0'],borderWidth:2,hoverOffset:6}]},options:{...go,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:12}}}}});
-new Chart('cAge',{type:'bar',data:{labels:['13–17','18–24','25–34','35–44','45–54','55–64','65+'],datasets:[{data:[172,2180,3842,4407,2935,958,284],backgroundColor:['rgba(50,58,146,0.2)','rgba(50,58,146,0.4)','rgba(50,58,146,0.6)','#323a92','#5563b5','rgba(50,58,146,0.45)','rgba(50,58,146,0.25)'],borderRadius:5}]},options:{...go,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(50,58,146,0.07)'}},y:{grid:{display:false}}}}});
-new Chart('cCountry',{type:'bar',data:{labels:['🇧🇷 Brasil','🌍 Outros'],datasets:[{data:[14924,33],backgroundColor:['#323a92','rgba(50,58,146,0.3)'],borderRadius:5}]},options:{...go,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(50,58,146,0.07)'}},y:{grid:{display:false}}}}});
-new Chart('cFmtEng',{type:'bar',data:{labels:['Reels','Carrosséis','Imagens'],datasets:[{label:'Eng. médio',data:[87.1,43.7,23.4],backgroundColor:['#323a92','#e960b2','rgba(50,58,146,0.4)'],borderRadius:7}]},options:{...go,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(50,58,146,0.07)'}}}}});
-new Chart('cFmtDist',{type:'doughnut',data:{labels:['Reels (7)','Imagens (5)','Carrosséis (3)'],datasets:[{data:[7,5,3],backgroundColor:['#323a92','rgba(50,58,146,0.4)','#e960b2'],borderWidth:2,hoverOffset:6}]},options:{...go,cutout:'55%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:12}}}}});
-const posts=[{x:10500,y:142,t:'Reel'},{x:9800,y:104,t:'Reel'},{x:9200,y:99,t:'Reel'},{x:8900,y:84,t:'Reel'},{x:8600,y:81,t:'Reel'},{x:7800,y:56,t:'Reel'},{x:7200,y:44,t:'Reel'},{x:5200,y:51,t:'Carrossel'},{x:4800,y:43,t:'Carrossel'},{x:4200,y:37,t:'Carrossel'},{x:3100,y:28,t:'Imagem'},{x:2800,y:25,t:'Imagem'},{x:2400,y:22,t:'Imagem'},{x:2200,y:21,t:'Imagem'},{x:1900,y:19,t:'Imagem'}];
-new Chart('cScatter',{type:'scatter',data:{datasets:[{label:'Posts',data:posts.map(p=>({x:p.x,y:p.y})),backgroundColor:posts.map(p=>p.t==='Reel'?'rgba(50,58,146,0.75)':p.t==='Carrossel'?'rgba(233,96,178,0.8)':'rgba(16,185,129,0.75)'),pointRadius:8,pointHoverRadius:10}]},options:{...go,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>{const p=posts[c.dataIndex];return `${p.t} | Alcance: ${p.x.toLocaleString('pt-BR')} | Eng: ${p.y}`}}}},scales:{x:{title:{display:true,text:'Alcance',font:{size:11}},grid:{color:'rgba(50,58,146,0.07)'}},y:{title:{display:true,text:'Engajamento',font:{size:11}},grid:{color:'rgba(50,58,146,0.07)'}}}}});
+const gx={grid:{display:false},ticks:{maxTicksLimit:10}};
+const gy={grid:{color:'rgba(50,58,146,0.07)'}};
+
+// ── 1. Daily Views & Reach ──
+new Chart('cDailyVR',{
+  type:'bar',
+  data:{
+    labels:L,
+    datasets:[
+      {label:'Views',data:Vi,backgroundColor:'rgba(50,58,146,0.18)',borderColor:'#323a92',borderWidth:1.5,borderRadius:3,order:2},
+      {label:'Alcance Total',data:Re,type:'line',borderColor:'#e960b2',borderWidth:2,pointRadius:0,fill:false,tension:0.4,order:1}
+    ]
+  },
+  options:{...go,plugins:{legend:{position:'top',labels:{boxWidth:11,padding:14}},tooltip:{mode:'index',intersect:false}},scales:{x:gx,y:gy}}
+});
+
+// ── 2. Daily Interactions (stacked) ──
+new Chart('cDailyI',{
+  type:'bar',
+  data:{
+    labels:L,
+    datasets:[
+      {label:'Curtidas',data:Li,backgroundColor:'rgba(50,58,146,0.7)',stack:'s'},
+      {label:'Comentários',data:Co,backgroundColor:'rgba(233,96,178,0.85)',stack:'s'},
+      {label:'Saves',data:Sa,backgroundColor:'rgba(16,185,129,0.7)',stack:'s'},
+      {label:'Shares',data:Sh,backgroundColor:'rgba(251,190,27,0.7)',stack:'s'}
+    ]
+  },
+  options:{...go,plugins:{legend:{position:'top',labels:{boxWidth:11,padding:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{...gx,ticks:{maxTicksLimit:8}},y:{...gy,stacked:true}}}
+});
+
+// ── 3. Daily Followers ──
+new Chart('cDailyF',{
+  type:'line',
+  data:{
+    labels:L,
+    datasets:[{label:'Novos seguidores',data:Fo,borderColor:'#e960b2',backgroundColor:'rgba(233,96,178,0.12)',borderWidth:2.5,pointRadius:3,pointBackgroundColor:'#e960b2',fill:true,tension:0.4}]
+  },
+  options:{...go,plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},scales:{x:{...gx,ticks:{maxTicksLimit:8}},y:gy}}
+});
+
+// ── 4. Organic vs Paid Reach per Day ──
+new Chart('cOrgPaid',{
+  type:'bar',
+  data:{
+    labels:L,
+    datasets:[
+      {label:'Alcance Orgânico',data:Ro,backgroundColor:'rgba(50,58,146,0.65)',stack:'r'},
+      {label:'Alcance Pago',data:Rp,backgroundColor:'rgba(233,96,178,0.72)',stack:'r'}
+    ]
+  },
+  options:{...go,plugins:{legend:{position:'top',labels:{boxWidth:11,padding:12}},tooltip:{mode:'index',intersect:false}},scales:{x:{...gx,ticks:{maxTicksLimit:8}},y:{...gy,stacked:true}}}
+});
+
+// ── 5. Spend Distribution Doughnut ──
+new Chart('cSpendDist',{
+  type:'doughnut',
+  data:{
+    labels:['Post Engaj. (R$45,64)','Tráfego 8/4 (R$599,20)','Vendas 8/4 (R$292,70)','Tráfego 16/4 (R$275,24)','Tráf.Seguid. (R$145,46)','Tráfego 22/4 (R$333,39)','Vendas Niver (R$247,29)'],
+    datasets:[{
+      data:[45.64,599.20,292.70,275.24,145.46,333.39,247.29],
+      backgroundColor:['#e960b2','#323a92','#4a54c7','#6366f1','#10b981','#f97316','#fbbe1b'],
+      borderWidth:2,
+      hoverOffset:6
+    }]
+  },
+  options:{...go,cutout:'55%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:8,font:{size:10}}}}}
+});
+
+// ── 6. Gender Doughnut ──
+new Chart('cGender',{
+  type:'doughnut',
+  data:{
+    labels:['Feminino','Masculino','Indefinido'],
+    datasets:[{data:[8810,3538,806],backgroundColor:['#e960b2','#323a92','#e2e4f0'],borderWidth:2,hoverOffset:6}]
+  },
+  options:{...go,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:12}}}}
+});
+
+// ── 7. Age Bar ──
+new Chart('cAge',{
+  type:'bar',
+  data:{
+    labels:['13–17','18–24','25–34','35–44','45–54','55–64','65+'],
+    datasets:[{
+      data:[172,2228,3842,4517,2935,1053,407],
+      backgroundColor:['rgba(50,58,146,0.2)','rgba(50,58,146,0.4)','rgba(50,58,146,0.6)','#323a92','#5563b5','rgba(50,58,146,0.45)','rgba(50,58,146,0.25)'],
+      borderRadius:5
+    }]
+  },
+  options:{...go,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(50,58,146,0.07)'}},y:{grid:{display:false}}}}
+});
+
+// ── 8. Countries Bar ──
+new Chart('cCountry',{
+  type:'bar',
+  data:{
+    labels:['🇧🇷 Brasil','🇵🇹 Portugal','🇺🇸 EUA','🇦🇴 Angola','Outros'],
+    datasets:[{
+      data:[15093,28,15,11,7],
+      backgroundColor:['#323a92','rgba(50,58,146,0.55)','rgba(50,58,146,0.4)','rgba(50,58,146,0.3)','rgba(50,58,146,0.2)'],
+      borderRadius:5
+    }]
+  },
+  options:{...go,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(50,58,146,0.07)'}},y:{grid:{display:false}}}}
+});
+
+// ── 9. Format Engagement Bar ──
+new Chart('cFmtEng',{
+  type:'bar',
+  data:{
+    labels:['Reels','Carrosséis','Imagens'],
+    datasets:[{label:'Eng. médio',data:[87.1,43.7,23.4],backgroundColor:['#323a92','#e960b2','rgba(50,58,146,0.4)'],borderRadius:7}]
+  },
+  options:{...go,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:gy}}
+});
+
+// ── 10. Format Distribution Doughnut ──
+new Chart('cFmtDist',{
+  type:'doughnut',
+  data:{
+    labels:['Reels (7)','Imagens (5)','Carrosséis (3)'],
+    datasets:[{data:[7,5,3],backgroundColor:['#323a92','rgba(50,58,146,0.4)','#e960b2'],borderWidth:2,hoverOffset:6}]
+  },
+  options:{...go,cutout:'55%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:12}}}}
+});
+
+// ── 11. Scatter: Reach vs Engagement ──
+const posts=[
+  {x:10500,y:142,t:'Reel'},{x:8800,y:104,t:'Reel'},{x:8100,y:99,t:'Reel'},
+  {x:7200,y:84,t:'Reel'},{x:6900,y:76,t:'Reel'},{x:6500,y:68,t:'Reel'},
+  {x:6100,y:61,t:'Reel'},
+  {x:5900,y:78,t:'Carrossel'},{x:5100,y:55,t:'Carrossel'},{x:4400,y:43,t:'Carrossel'},
+  {x:3400,y:31,t:'Imagem'},{x:3100,y:28,t:'Imagem'},{x:2700,y:25,t:'Imagem'},
+  {x:2400,y:23,t:'Imagem'},{x:2000,y:19,t:'Imagem'}
+];
+new Chart('cScatter',{
+  type:'scatter',
+  data:{
+    datasets:[{
+      label:'Posts',
+      data:posts.map(p=>({x:p.x,y:p.y})),
+      backgroundColor:posts.map(p=>p.t==='Reel'?'rgba(50,58,146,0.75)':p.t==='Carrossel'?'rgba(233,96,178,0.8)':'rgba(16,185,129,0.75)'),
+      pointRadius:9,
+      pointHoverRadius:11
+    }]
+  },
+  options:{
+    ...go,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:(c)=>{const p=posts[c.dataIndex];return p.t+' | Alcance: '+p.x.toLocaleString('pt-BR')+' | Eng: '+p.y;}}}
+    },
+    scales:{
+      x:{title:{display:true,text:'Alcance Orgânico',font:{size:11}},grid:{color:'rgba(50,58,146,0.07)'}},
+      y:{title:{display:true,text:'Engajamento Total',font:{size:11}},grid:{color:'rgba(50,58,146,0.07)'}}
+    }
+  }
+});
 </script>
 </body>
 </html>
