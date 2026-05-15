@@ -25,25 +25,20 @@
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6}
 
 /* ── HEADER ── */
-.hdr{background:linear-gradient(135deg,#323a92,#4a54c7 65%,#3d47b0);padding:40px 32px 36px;position:relative;overflow:hidden}
-.hdr::before{content:'';position:absolute;top:-80px;right:-60px;width:380px;height:380px;background:radial-gradient(circle,rgba(233,96,178,0.22),transparent 65%);pointer-events:none}
-.hdr::after{content:'';position:absolute;bottom:-60px;left:5%;width:300px;height:300px;background:radial-gradient(circle,rgba(251,190,27,0.1),transparent 65%);pointer-events:none}
-.hi{max-width:1200px;margin:0 auto;position:relative;z-index:1}
-.ht{display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap}
-.av{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#e960b2,#fbbe1b);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;box-shadow:0 0 28px rgba(233,96,178,0.5)}
-.ph{font-size:12px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:3px}
-.pn{font-size:27px;font-weight:800;color:#fff;margin-bottom:5px}
-.pb{font-size:13px;color:rgba(255,255,255,0.75);max-width:520px;border-left:3px solid rgba(233,96,178,.8);padding-left:12px;margin-bottom:11px}
-.ptags{display:flex;gap:7px;flex-wrap:wrap}
-.tag{padding:3px 11px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:#fff}
-.tag.a{background:rgba(233,96,178,.22);border-color:rgba(233,96,178,.5);color:#f9a0d8}
-.tag.y{background:rgba(251,190,27,.2);border-color:rgba(251,190,27,.5);color:#fbbe1b}
-.hs{display:flex;gap:26px;margin-top:26px;flex-wrap:wrap}
+.hdr{background:linear-gradient(135deg,#323a92 0%,#4a54c7 60%,#5c68d8 100%);color:#fff;padding:48px 24px 40px;text-align:center;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(233,96,178,0.22) 0%,transparent 60%);pointer-events:none}
+.hi{max-width:1100px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+.av{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#e960b2,#fbbe1b);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 16px;box-shadow:0 4px 20px rgba(0,0,0,0.3);border:3px solid rgba(255,255,255,0.3)}
+.ph{font-size:1rem;opacity:0.8;letter-spacing:0.05em;margin-bottom:4px}
+.pn{font-size:2rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:10px}
+.pb{max-width:520px;margin:0 auto 16px;opacity:0.88;font-size:0.95rem;line-height:1.5}
+.ptags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px}
+.tag{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:4px 14px;font-size:0.8rem;letter-spacing:0.03em}
+.hs{display:flex;justify-content:center;gap:32px;margin-bottom:24px;flex-wrap:wrap}
 .hsi{text-align:center}
-.hsv{font-size:21px;font-weight:800;color:#fff}
-.hsl{font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.05em}
-.hsep{width:1px;background:rgba(255,255,255,.18);align-self:stretch}
-.pbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(233,96,178,.18);border:1px solid rgba(233,96,178,.4);padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;margin-top:18px;color:#fbbe1b;border-color:rgba(251,190,27,0.45)}
+.hsv{font-size:1.5rem;font-weight:700;color:#e960b2}
+.hsl{font-size:0.78rem;opacity:0.75;text-transform:uppercase;letter-spacing:0.06em}
+.pbadge{display:inline-flex;align-items:center;gap:8px;background:rgba(233,96,178,0.2);border:1px solid rgba(251,190,27,0.45);border-radius:24px;padding:8px 20px;font-size:0.88rem;color:#fbbe1b;font-weight:600}
 
 /* ── LAYOUT ── */
 .wrap{max-width:1200px;margin:0 auto;padding:28px 24px}
@@ -129,29 +124,23 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
 <div class="hdr">
   <div class="hi">
-    <div class="ht">
-      <div class="av">📝</div>
-      <div>
-        <div class="ph">@questaodetexto</div>
-        <div class="pn">Questão de Texto</div>
-        <div class="pb">Canal de conteúdo sobre língua portuguesa, redação e literatura — criando conexão com o aprendizado de forma leve e profunda.</div>
-        <div class="ptags">
-          <span class="tag a">#LínguaPortuguesa</span>
-          <span class="tag y">#Redação</span>
-          <span class="tag">#Literatura</span>
-          <span class="tag">#ENEM</span>
-          <span class="tag">#Educação</span>
-        </div>
-      </div>
+    <div class="av">📝</div>
+    <p class="ph">@questaodetexto</p>
+    <h1 class="pn">Questão de Texto</h1>
+    <p class="pb">Canal de conteúdo sobre língua portuguesa, redação e literatura — criando conexão com o aprendizado de forma leve e profunda.</p>
+    <div class="ptags">
+      <span class="tag">#LínguaPortuguesa</span>
+      <span class="tag">#Redação</span>
+      <span class="tag">#Literatura</span>
+      <span class="tag">#ENEM</span>
+      <span class="tag">#Educação</span>
     </div>
     <div class="hs">
       <div class="hsi"><div class="hsv">15.154</div><div class="hsl">Seguidores</div></div>
-      <div class="hsep"></div>
       <div class="hsi"><div class="hsv">50</div><div class="hsl">Seguindo</div></div>
-      <div class="hsep"></div>
       <div class="hsi"><div class="hsv">370</div><div class="hsl">Publicações</div></div>
     </div>
-    <div class="pbadge">📅 Período: 14 abr – 13 mai 2026 (30 dias)</div>
+    <div class="pbadge">📅 Período analisado: 14 abr – 13 mai 2026</div>
   </div>
 </div>
 
